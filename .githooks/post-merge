@@ -1,0 +1,4 @@
+#!/bin/bash
+HOOK="$HOME/.local/bin/engram-pre-push-hook.sh"
+[ -x "$HOOK" ] && HOOK_NAME="post-merge" "$HOOK" "$@"
+exit 0
