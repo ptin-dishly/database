@@ -27,4 +27,4 @@ migrate-create:
 	$(MIGRATE_CMD) create -ext sql -dir /migrations -seq $$name
 
 seed:
-	docker compose -f docker-compose.dev.yml exec db psql -U $(POSTGRES_USER) -d $(POSTGRES_DB) -f /dev/stdin < seeds/seed.sql
+	docker compose -f docker-compose.dev.yml exec -T db psql -U $(POSTGRES_USER) -d $(POSTGRES_DB) -f /dev/stdin < seeds/seed.sql
