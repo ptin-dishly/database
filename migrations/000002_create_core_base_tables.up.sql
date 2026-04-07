@@ -21,7 +21,8 @@ CREATE TABLE IF NOT EXISTS establishments (
 -- 3. Users table
 CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    establishment_id UUID REFERENCES establishments(id) ON DELETE CASCADE,
+    -- Canviat a NOT NULL i RESTRICT per seguretat (Auditoria)
+    establishment_id UUID NOT NULL REFERENCES establishments(id) ON DELETE RESTRICT,
     email VARCHAR UNIQUE NOT NULL,
     password_hash TEXT NOT NULL,
     name VARCHAR NOT NULL,
@@ -35,25 +36,31 @@ CREATE TABLE IF NOT EXISTS users (
 -- 4. Rooms table
 CREATE TABLE IF NOT EXISTS rooms (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    establishment_id UUID REFERENCES establishments(id) ON DELETE CASCADE,
+    establishment_id UUID NOT NULL REFERENCES establishments(id) ON DELETE CASCADE,
     name VARCHAR NOT NULL,
     capacity INTEGER,
-    floor INTEGER
+    floor INTEGER,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
 -- 5. Tables table
 CREATE TABLE IF NOT EXISTS tables (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    establishment_id UUID REFERENCES establishments(id) ON DELETE CASCADE,
-    room_id UUID REFERENCES rooms(id) ON DELETE SET NULL,
+    establishment_id UUID NOT NULL REFERENCES establishments(id) ON DELETE CASCADE,
+    room_id UUID REFERENCES rooms(id) ON DELETE CASCADE,
     table_number VARCHAR NOT NULL,
-    capacity INTEGER
+    capacity INTEGER,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
 -- 6. Seats table
 CREATE TABLE IF NOT EXISTS seats (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    table_id UUID REFERENCES tables(id) ON DELETE CASCADE,
-    seat_number INTEGER,
-    label VARCHAR
+    table_id UUID NOT NULL REFERENCES tables(id) ON DELETE CASCADE,
+    seat_number INTEGER NOT NULL,
+    label VARCHAR,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
