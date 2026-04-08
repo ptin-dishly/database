@@ -1,7 +1,7 @@
 -- 1. Create user role ENUM
 CREATE TYPE user_role AS ENUM (
     'admin',
-    'manager',
+    'sales',
     'waiter',
     'kitchen'
 );
