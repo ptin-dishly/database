@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS recipe_alternatives CASCADE;
+DROP TABLE IF EXISTS recipe_allergens CASCADE;
+DROP TABLE IF EXISTS recipe_ingredients CASCADE;
+DROP TABLE IF EXISTS recipe_steps CASCADE;
+DROP TABLE IF EXISTS recipes CASCADE;
+DROP TYPE IF EXISTS unit_type;
+DROP TYPE IF EXISTS recipe_category;
