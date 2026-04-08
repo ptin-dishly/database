@@ -23,12 +23,14 @@ CREATE TABLE IF NOT EXISTS recipes (
     servings INTEGER DEFAULT 1,
     preparation_time INTEGER,
     version INTEGER DEFAULT 1,
-    created_by UUID REFERENCES users(id) ON DELETE SET NULL -- Coma eliminada
+    created_by UUID REFERENCES users(id) ON DELETE SET NULL,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS recipe_steps (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    recipe_id UUID REFERENCES recipes(id) ON DELETE CASCADE,
+    recipe_id UUID NOT NULL REFERENCES recipes(id) ON DELETE CASCADE,
     step_number INTEGER NOT NULL,
     instruction TEXT NOT NULL,
     duration INTEGER CHECK (duration >= 0),
@@ -37,7 +39,7 @@ CREATE TABLE IF NOT EXISTS recipe_steps (
 
 CREATE TABLE IF NOT EXISTS recipe_ingredients (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    recipe_id UUID REFERENCES recipes(id) ON DELETE CASCADE,
+    recipe_id UUID NOT NULL REFERENCES recipes(id) ON DELETE CASCADE,
     ingredient_id UUID REFERENCES ingredients(id) ON DELETE RESTRICT,
     sub_recipe_id UUID REFERENCES recipes(id) ON DELETE RESTRICT,
     quantity NUMERIC(10,4) NOT NULL CHECK (quantity >= 0),
@@ -52,7 +54,7 @@ CREATE TABLE IF NOT EXISTS recipe_ingredients (
 
 CREATE TABLE IF NOT EXISTS recipe_allergens (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    recipe_id UUID REFERENCES recipes(id) ON DELETE CASCADE,
+    recipe_id UUID NOT NULL REFERENCES recipes(id) ON DELETE CASCADE,
     allergen_id UUID REFERENCES allergens(id) ON DELETE CASCADE,
     is_manual BOOLEAN DEFAULT FALSE,
     contains BOOLEAN DEFAULT TRUE,
@@ -61,8 +63,9 @@ CREATE TABLE IF NOT EXISTS recipe_allergens (
 
 CREATE TABLE IF NOT EXISTS recipe_alternatives (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    recipe_id UUID REFERENCES recipes(id) ON DELETE CASCADE,
+    recipe_id UUID NOT NULL REFERENCES recipes(id) ON DELETE CASCADE,
     alternative_recipe_id UUID REFERENCES recipes(id) ON DELETE CASCADE,
     reason TEXT,
-    CHECK (recipe_id <> alternative_recipe_id) 
+    CHECK (recipe_id <> alternative_recipe_id),
+    UNIQUE (recipe_id, alternative_recipe_id)
 );
