@@ -81,7 +81,12 @@ INSERT INTO users (id, establishment_id, email, password_hash, name, role, is_ac
     ('33333333-0003-0003-0003-000000000003', '22222222-0002-0002-0002-000000000001', 'kitchen@calamaria.cat', '$2b$10$placeholder.hash.kit1',   'Pere Roca',    'kitchen', TRUE),
     ('33333333-0003-0003-0003-000000000004', '22222222-0002-0002-0002-000000000001', 'sales@calamaria.cat',   '$2b$10$placeholder.hash.sal1',   'Anna Vidal',   'sales',   TRUE),
     ('33333333-0003-0003-0003-000000000005', '22222222-0002-0002-0002-000000000002', 'admin@elraco.cat',      '$2b$10$placeholder.hash.admin2', 'Pau Domènech', 'admin',   TRUE),
-    ('33333333-0003-0003-0003-000000000006', '22222222-0002-0002-0002-000000000002', 'waiter2@elraco.cat',    '$2b$10$placeholder.hash.wait2',  'Laia Mas',     'waiter',  TRUE)
+    ('33333333-0003-0003-0003-000000000006', '22222222-0002-0002-0002-000000000002', 'waiter2@elraco.cat',    '$2b$10$placeholder.hash.wait2',  'Laia Mas',     'waiter',  TRUE),
+    -- TEST USERS (passwords known, for development/testing only)
+    ('99999999-9999-9999-9999-000000000001', '22222222-0002-0002-0002-000000000001', 'test.admin@dishly.dev',   '$2b$10$FShFCgq.WgHdcswfqT4/QusZBgyVjFzbdMaTlpA31X8iGdUJz7l9O', 'Test Admin',   'admin',   TRUE),
+    ('99999999-9999-9999-9999-000000000002', '22222222-0002-0002-0002-000000000001', 'test.sales@dishly.dev',   '$2b$10$.r6LC3nBqWVjC30a9PZ50.noWiyniw0y302GaIHlHR1fIEnvE0goa',  'Test Sales',   'sales',   TRUE),
+    ('99999999-9999-9999-9999-000000000003', '22222222-0002-0002-0002-000000000001', 'test.waiter@dishly.dev',  '$2b$10$i2qnzTwbJ1eQqEgPYrmfUevQn4LjxzPYGgOy/ZbCRPw13fQRKnFO2', 'Test Waiter',  'waiter',  TRUE),
+    ('99999999-9999-9999-9999-000000000004', '22222222-0002-0002-0002-000000000001', 'test.kitchen@dishly.dev', '$2b$10$ojEqS21bLyRsXWxsjcOozOi6Ebbm.VzqU1t94Exxc.oFHHEED0CYq', 'Test Kitchen', 'kitchen', TRUE)
 ON CONFLICT DO NOTHING;
 
 -- ============================================================================
