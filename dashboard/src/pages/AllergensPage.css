@@ -1,0 +1,332 @@
+/* ============================================================================
+   AllergensPage — Estilos de la página de Alérgenos
+   ============================================================================ */
+
+.allergens-page {
+  animation: fadeIn 0.4s ease;
+}
+
+/* ── Grid de los 14 alérgenos UE ── */
+.allergen-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+  gap: var(--space-md);
+}
+
+.allergen-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-sm);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  cursor: default;
+  transition: all var(--transition-base);
+  animation: fadeInUp 0.4s ease both;
+  position: relative;
+  overflow: hidden;
+}
+
+.allergen-item:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-light);
+  transform: translateY(-2px);
+}
+
+.allergen-item-icon {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.allergen-item-name {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: center;
+  line-height: 1.2;
+}
+
+.allergen-item-eu {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.allergen-item-count {
+  font-size: var(--font-size-lg);
+  font-weight: 800;
+  color: var(--accent-primary);
+}
+
+.allergen-item-label {
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+}
+
+.allergen-item-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: var(--space-xs);
+}
+
+.allergen-item-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 1s ease;
+}
+
+/* Colores para severidad */
+.severity-high .allergen-item-bar-fill {
+  background: linear-gradient(90deg, var(--accent-danger), #fb923c);
+}
+
+.severity-medium .allergen-item-bar-fill {
+  background: linear-gradient(90deg, var(--accent-warning), #fde68a);
+}
+
+.severity-low .allergen-item-bar-fill {
+  background: linear-gradient(90deg, var(--accent-secondary), #a7f3d0);
+}
+
+/* ── Mapa de calor (Heatmap) ── */
+.heatmap-container {
+  overflow-x: auto;
+  padding-bottom: var(--space-sm);
+}
+
+.heatmap-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-xs);
+}
+
+.heatmap-table th {
+  padding: var(--space-sm);
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.heatmap-table th:first-child {
+  text-align: left;
+  min-width: 160px;
+  text-transform: none;
+  font-size: var(--font-size-sm);
+  letter-spacing: 0;
+}
+
+.heatmap-table td {
+  padding: var(--space-sm);
+  text-align: center;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.heatmap-table td:first-child {
+  text-align: left;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.heatmap-table tr:last-child td {
+  border-bottom: none;
+}
+
+.heatmap-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Celdas del heatmap */
+.heatmap-cell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: transform var(--transition-fast);
+}
+
+.heatmap-cell:hover {
+  transform: scale(1.2);
+}
+
+.heatmap-contains {
+  background: rgba(248, 113, 113, 0.25);
+  color: var(--accent-danger);
+}
+
+.heatmap-traces {
+  background: rgba(251, 191, 36, 0.2);
+  color: var(--accent-warning);
+}
+
+.heatmap-free {
+  background: rgba(52, 211, 153, 0.12);
+  color: var(--accent-secondary);
+}
+
+.heatmap-empty {
+  background: transparent;
+  color: var(--text-muted);
+}
+
+/* ── Leyenda del heatmap ── */
+.heatmap-legend {
+  display: flex;
+  gap: var(--space-lg);
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.heatmap-legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+}
+
+.heatmap-legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+}
+
+/* ── Tarjetas de platos alternativos ── */
+.alternatives-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.alternative-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.alternative-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-light);
+}
+
+.alternative-arrow {
+  font-size: 1.2rem;
+  color: var(--accent-secondary);
+  flex-shrink: 0;
+}
+
+.alternative-original {
+  flex: 1;
+}
+
+.alternative-original-name {
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.alternative-original-allergens {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.alternative-replacement {
+  flex: 1;
+}
+
+.alternative-replacement-name {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--accent-secondary);
+}
+
+.alternative-replacement-reason {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ── Distribución de presencia ── */
+.presence-distribution {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-sm) 0;
+}
+
+.presence-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.presence-label {
+  width: 90px;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.presence-bar-track {
+  flex: 1;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.presence-bar-fill {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 1s ease;
+}
+
+.presence-value {
+  width: 50px;
+  text-align: right;
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Sección de título ── */
+.section-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-md);
+  margin-top: var(--space-xl);
+}
+
+.section-title-row:first-child {
+  margin-top: 0;
+}
+
+.section-title-text {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  font-weight: 600;
+}

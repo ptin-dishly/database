@@ -1,0 +1,115 @@
+/* ============================================================================
+   OverviewPage — Estilos específicos de la Vista General
+   ============================================================================ */
+
+.overview-page {
+  animation: fadeIn 0.4s ease;
+}
+
+.overview-section-title {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  font-weight: 600;
+  margin-bottom: var(--space-md);
+  margin-top: var(--space-xl);
+}
+
+.overview-section-title:first-child {
+  margin-top: 0;
+}
+
+/* ── Mini barras de actividad (sparkline simulada) ── */
+.activity-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 48px;
+  padding-top: var(--space-md);
+}
+
+.activity-bar {
+  flex: 1;
+  background: linear-gradient(to top, var(--accent-primary), rgba(129, 140, 248, 0.3));
+  border-radius: 2px 2px 0 0;
+  min-width: 4px;
+  transition: height 0.6s ease;
+}
+
+/* ── Indicador de ocupación circular ── */
+.occupancy-ring {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg) 0;
+}
+
+.occupancy-ring-visual {
+  position: relative;
+  width: 140px;
+  height: 140px;
+}
+
+.occupancy-ring-svg {
+  transform: rotate(-90deg);
+  width: 140px;
+  height: 140px;
+}
+
+.occupancy-ring-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.05);
+  stroke-width: 8;
+}
+
+.occupancy-ring-fill {
+  fill: none;
+  stroke: var(--accent-primary);
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-dasharray: 408;
+  transition: stroke-dashoffset 1.5s ease;
+}
+
+.occupancy-ring-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.occupancy-ring-value {
+  font-size: var(--font-size-xl);
+  font-weight: 800;
+  color: var(--text-primary);
+  display: block;
+}
+
+.occupancy-ring-label {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+.occupancy-details {
+  display: flex;
+  gap: var(--space-xl);
+  margin-top: var(--space-lg);
+}
+
+.occupancy-detail {
+  text-align: center;
+}
+
+.occupancy-detail-value {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.occupancy-detail-label {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}

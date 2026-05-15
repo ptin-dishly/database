@@ -1,0 +1,336 @@
+/* ============================================================================
+   SalesPage — Estilos de la página de Ventas
+   ============================================================================ */
+
+.sales-page {
+  animation: fadeIn 0.4s ease;
+}
+
+/* ── Gráfico de barras de ingresos semanales ── */
+.revenue-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-sm);
+  height: 220px;
+  padding: var(--space-md) 0;
+}
+
+.revenue-bar-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.revenue-bar-value {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.revenue-bar {
+  width: 100%;
+  max-width: 52px;
+  border-radius: 6px 6px 2px 2px;
+  background: linear-gradient(to top, var(--accent-primary), rgba(129, 140, 248, 0.4));
+  transition: height 0.8s ease, background 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.revenue-bar:hover {
+  background: linear-gradient(to top, #a78bfa, rgba(167, 139, 250, 0.5));
+}
+
+.revenue-bar.today {
+  background: linear-gradient(to top, var(--accent-secondary), rgba(52, 211, 153, 0.4));
+}
+
+.revenue-bar.today:hover {
+  background: linear-gradient(to top, #6ee7b7, rgba(110, 231, 183, 0.5));
+}
+
+.revenue-bar-label {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-top: var(--space-xs);
+}
+
+/* ── Leyenda del gráfico ── */
+.chart-legend {
+  display: flex;
+  gap: var(--space-lg);
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.chart-legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+}
+
+.chart-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+/* ── Ingresos por establecimiento ── */
+.establishment-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.establishment-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  transition: all var(--transition-fast);
+}
+
+.establishment-row:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-light);
+}
+
+.establishment-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.establishment-info {
+  flex: 1;
+}
+
+.establishment-name {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.establishment-address {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+.establishment-revenue {
+  text-align: right;
+}
+
+.establishment-revenue-value {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.establishment-revenue-orders {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+/* ── Ingresos por categoría (barras horizontales con porcentaje) ── */
+.category-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.category-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.category-icon {
+  font-size: 1.3rem;
+  width: 30px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.category-label {
+  width: 110px;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.category-bar-track {
+  flex: 1;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.category-bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 1s ease;
+}
+
+.category-values {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  min-width: 80px;
+}
+
+.category-amount {
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.category-pct {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+/* ── Top platos por facturación ── */
+.revenue-dish-item {
+  display: flex;
+  align-items: center;
+  padding: var(--space-md) 0;
+  border-bottom: 1px solid var(--border-subtle);
+  gap: var(--space-md);
+}
+
+.revenue-dish-item:last-child {
+  border-bottom: none;
+}
+
+.revenue-dish-rank {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.revenue-dish-info {
+  flex: 1;
+}
+
+.revenue-dish-name {
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.revenue-dish-meta {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.revenue-dish-amount {
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  color: var(--accent-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Distribución de tickets ── */
+.ticket-distribution {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.ticket-range-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.ticket-range-label {
+  width: 80px;
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.ticket-range-bar-track {
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.ticket-range-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--accent-primary), #a78bfa);
+  transition: width 1s ease;
+}
+
+.ticket-range-count {
+  width: 60px;
+  text-align: right;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.ticket-range-pct {
+  width: 40px;
+  text-align: right;
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+/* ── Insight / Dato clave ── */
+.insight-box {
+  padding: var(--space-md);
+  background: rgba(129, 140, 248, 0.06);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(129, 140, 248, 0.12);
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-top: var(--space-md);
+}
+
+.insight-box strong {
+  color: var(--accent-primary);
+}
+
+/* ── Tres columnas ── */
+.panels-row-sales {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}

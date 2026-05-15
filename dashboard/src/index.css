@@ -1,0 +1,174 @@
+/* ============================================================================
+   CalBlay Analytics — Sistema de Diseño Global (Design System)
+   ============================================================================
+   Este archivo define TODAS las variables de diseño que se usan en la app.
+   Si quieres cambiar un color o tamaño, solo tienes que cambiarlo aquí
+   y se actualiza automáticamente en toda la aplicación.
+   ============================================================================ */
+
+/* --- Variables Globales (Custom Properties) --------------------------------
+   Las variables CSS empiezan con -- y se definen dentro de :root para que
+   estén disponibles en cualquier parte de la aplicación.
+   -------------------------------------------------------------------------- */
+:root {
+  /* ── Colores de Fondo ── */
+  --bg-primary: #0a0b10;           /* Fondo principal: azul-negro profundo */
+  --bg-secondary: #12131a;         /* Fondo de secciones: gris muy oscuro */
+  --bg-card: rgba(255, 255, 255, 0.04);  /* Fondo de tarjetas: blanco casi invisible */
+  --bg-card-hover: rgba(255, 255, 255, 0.07); /* Tarjeta al pasar el ratón */
+  --bg-sidebar: #0d0e14;          /* Fondo del menú lateral */
+
+  /* ── Colores de Acento (Destacados) ── */
+  --accent-primary: #818cf8;       /* Índigo suave: botones principales, enlaces */
+  --accent-primary-glow: rgba(129, 140, 248, 0.15); /* Resplandor sutil del índigo */
+  --accent-secondary: #34d399;     /* Esmeralda: indicadores positivos, ganancias */
+  --accent-warning: #fbbf24;       /* Ámbar dorado: advertencias */
+  --accent-danger: #f87171;        /* Rosa-rojo suave: errores, alertas */
+  --accent-info: #60a5fa;          /* Azul cielo: información */
+
+  /* ── Colores de Texto ── */
+  --text-primary: rgba(255, 255, 255, 0.92);  /* Texto principal: blanco suave */
+  --text-secondary: rgba(255, 255, 255, 0.55); /* Texto secundario: gris claro */
+  --text-muted: rgba(255, 255, 255, 0.30);     /* Texto apagado: muy sutil */
+
+  /* ── Bordes ── */
+  --border-subtle: rgba(255, 255, 255, 0.06);  /* Bordes casi invisibles */
+  --border-light: rgba(255, 255, 255, 0.10);   /* Bordes ligeros */
+
+  /* ── Tipografía ── */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-size-xs: 0.75rem;    /* 12px — Etiquetas pequeñas */
+  --font-size-sm: 0.8125rem;  /* 13px — Texto secundario */
+  --font-size-base: 0.875rem; /* 14px — Texto normal */
+  --font-size-md: 1rem;       /* 16px — Subtítulos */
+  --font-size-lg: 1.25rem;    /* 20px — Títulos de tarjetas */
+  --font-size-xl: 1.75rem;    /* 28px — Títulos de sección */
+  --font-size-2xl: 2.25rem;   /* 36px — Números grandes (KPIs) */
+
+  /* ── Espaciado ── */
+  --space-xs: 0.25rem;   /* 4px */
+  --space-sm: 0.5rem;    /* 8px */
+  --space-md: 1rem;      /* 16px */
+  --space-lg: 1.5rem;    /* 24px */
+  --space-xl: 2rem;      /* 32px */
+  --space-2xl: 3rem;     /* 48px */
+
+  /* ── Bordes Redondeados ── */
+  --radius-sm: 0.5rem;   /* 8px — Botones pequeños */
+  --radius-md: 0.75rem;  /* 12px — Tarjetas */
+  --radius-lg: 1rem;     /* 16px — Paneles grandes */
+  --radius-xl: 1.25rem;  /* 20px — Contenedores principales */
+
+  /* ── Sombras ── */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 20px var(--accent-primary-glow);
+
+  /* ── Transiciones (Animaciones suaves) ── */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms ease;
+
+  /* ── Dimensiones del Layout ── */
+  --sidebar-width: 260px;        /* Ancho del menú lateral */
+  --sidebar-collapsed: 72px;     /* Ancho del menú colapsado */
+  --header-height: 64px;         /* Alto de la barra superior */
+}
+
+/* --- Reset Global ----------------------------------------------------------
+   Elimina los estilos por defecto del navegador para empezar con una base
+   limpia y consistente en todos los navegadores.
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+a {
+  color: var(--accent-primary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--accent-secondary);
+}
+
+/* --- Scrollbar personalizada ----------------------------------------------- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-light);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* --- Utilidades Globales --------------------------------------------------- */
+.glass {
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.glass:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-light);
+}
+
+/* Animación de entrada para elementos que aparecen en pantalla */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 8px var(--accent-primary-glow); }
+  50% { box-shadow: 0 0 20px var(--accent-primary-glow); }
+}

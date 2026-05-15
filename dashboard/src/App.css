@@ -1,0 +1,24 @@
+/* ============================================================================
+   App.css — Layout principal del Dashboard
+   ============================================================================
+   Define la estructura de la página:
+   - Sidebar fijo a la izquierda
+   - Header fijo arriba
+   - Contenido principal ocupa el espacio restante
+   ============================================================================ */
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg-primary);
+}
+
+/* El contenido principal se desplaza hacia la derecha (deja espacio al sidebar)
+   y hacia abajo (deja espacio al header) */
+.app-main {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  margin-top: var(--header-height);
+  padding: var(--space-xl);
+  min-height: calc(100vh - var(--header-height));
+}

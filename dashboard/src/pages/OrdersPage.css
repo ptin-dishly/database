@@ -1,0 +1,360 @@
+/* ============================================================================
+   OrdersPage — Estilos de la página de Pedidos
+   ============================================================================ */
+
+.orders-page {
+  animation: fadeIn 0.4s ease;
+}
+
+/* ── Pipeline de estados (flujo visual de pedidos) ── */
+.pipeline-container {
+  display: flex;
+  gap: var(--space-md);
+  padding: var(--space-sm) 0;
+}
+
+.pipeline-stage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-lg) var(--space-md);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+  position: relative;
+}
+
+.pipeline-stage:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-light);
+}
+
+.pipeline-stage-count {
+  font-size: var(--font-size-2xl);
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.pipeline-stage-label {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.pipeline-stage-bar {
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  margin-top: var(--space-xs);
+}
+
+/* Flechas entre etapas */
+.pipeline-arrow {
+  display: flex;
+  align-items: center;
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+/* ── Feed de pedidos en vivo ── */
+.orders-feed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.order-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  border-left: 3px solid transparent;
+}
+
+.order-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-light);
+}
+
+.order-card.status-pending {
+  border-left-color: var(--accent-warning);
+}
+
+.order-card.status-confirmed {
+  border-left-color: var(--accent-info);
+}
+
+.order-card.status-preparing {
+  border-left-color: var(--accent-primary);
+}
+
+.order-card.status-served {
+  border-left-color: var(--accent-secondary);
+}
+
+.order-card.status-cancelled {
+  border-left-color: var(--accent-danger);
+  opacity: 0.6;
+}
+
+.order-card-id {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--text-primary);
+  min-width: 70px;
+  font-variant-numeric: tabular-nums;
+}
+
+.order-card-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.order-card-items {
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.order-card-meta {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  display: flex;
+  gap: var(--space-md);
+}
+
+.order-card-table {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  min-width: 70px;
+}
+
+.order-card-time {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  min-width: 50px;
+  text-align: right;
+}
+
+.order-card-status {
+  min-width: 90px;
+  text-align: center;
+}
+
+/* ── Gráfico de pedidos por hora ── */
+.orders-hourly-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 160px;
+  padding: var(--space-md) 0;
+}
+
+.orders-hourly-bar-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.orders-hourly-bar {
+  width: 100%;
+  max-width: 28px;
+  border-radius: 4px 4px 1px 1px;
+  transition: height 0.8s ease;
+  cursor: pointer;
+}
+
+.orders-hourly-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.orders-hourly-value {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* ── Tarjetas de pedidos cancelados ── */
+.cancellation-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.cancellation-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  background: rgba(248, 113, 113, 0.04);
+  border: 1px solid rgba(248, 113, 113, 0.1);
+  border-radius: var(--radius-sm);
+}
+
+.cancellation-item-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.cancellation-item-info {
+  flex: 1;
+}
+
+.cancellation-item-name {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.cancellation-item-reason {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+.cancellation-item-count {
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  color: var(--accent-danger);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Rendimiento por sala ── */
+.room-performance {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.room-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+}
+
+.room-row:hover {
+  background: var(--bg-card-hover);
+}
+
+.room-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.room-info {
+  flex: 1;
+}
+
+.room-name {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.room-detail {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+.room-stats {
+  display: flex;
+  gap: var(--space-lg);
+}
+
+.room-stat {
+  text-align: center;
+}
+
+.room-stat-value {
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.room-stat-label {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+/* ── Tiempo medio por estado (mini timeline) ── */
+.time-pipeline {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: var(--space-lg) 0;
+}
+
+.time-pipeline-step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  position: relative;
+}
+
+.time-pipeline-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.time-pipeline-connector {
+  position: absolute;
+  top: 7px;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background: var(--border-subtle);
+  z-index: 1;
+}
+
+.time-pipeline-step:last-child .time-pipeline-connector {
+  display: none;
+}
+
+.time-pipeline-label {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  font-weight: 500;
+  text-align: center;
+}
+
+.time-pipeline-time {
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
