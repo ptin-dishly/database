@@ -146,89 +146,97 @@ ON CONFLICT DO NOTHING;
 -- ============================================================================
 -- 9. RECIPES (ORIGINALES + MASIVA DE CAL BLAY)
 -- ============================================================================
-INSERT INTO recipes (id, establishment_id, name, description, category, portion_size_kg, servings, preparation_time, version, created_by) VALUES
+INSERT INTO recipes (id, establishment_id, name, description, category, portion_size_kg, servings, preparation_time, version, created_by, image_url) VALUES
     -- Originales (Para no romper comandas antiguas)
-    ('77777777-0007-0007-0007-000000000001', '22222222-0002-0002-0002-000000000001', 'Lasaña de carne',     'Lasaña tradicional', 'segundo_plato', 0.400, 1, 60, 1, '33333333-0003-0003-0003-000000000001'),
-    ('77777777-0007-0007-0007-000000000002', '22222222-0002-0002-0002-000000000001', 'Salmón a la plancha', 'Salmón con limón', 'segundo_plato', 0.250, 1, 20, 1, '33333333-0003-0003-0003-000000000001'),
-    ('77777777-0007-0007-0007-000000000003', '22222222-0002-0002-0002-000000000001', 'Ensalada César',      'Ensalada con pollo', 'entrante',      0.300, 1, 15, 1, '33333333-0003-0003-0003-000000000001'),
-    ('77777777-0007-0007-0007-000000000004', '22222222-0002-0002-0002-000000000001', 'Crema catalana',      'Postre tradicional', 'postre',        0.150, 1, 30, 1, '33333333-0003-0003-0003-000000000001'),
-    ('77777777-0007-0007-0007-000000000005', '22222222-0002-0002-0002-000000000002', 'Pollo al ajillo',     'Pollo con ajo',      'segundo_plato', 0.350, 1, 35, 1, '33333333-0003-0003-0003-000000000005'),
-    ('77777777-0007-0007-0007-000000000006', '22222222-0002-0002-0002-000000000002', 'Patatas bravas',      'Con salsa brava',    'entrante',      0.200, 1, 25, 1, '33333333-0003-0003-0003-000000000005'),
-    ('77777777-0007-0007-0007-000000000007', '22222222-0002-0002-0002-000000000001', 'Salsa bechamel',      'Base para lasaña',   'salsa',         0.100, 4, 15, 1, '33333333-0003-0003-0003-000000000001'),
+    ('77777777-0007-0007-0007-000000000001', '22222222-0002-0002-0002-000000000001', 'Lasanya de carn',     'Lasanya tradicional', 'segundo_plato', 0.400, 1, 60, 1, '33333333-0003-0003-0003-000000000001', 'https://newmansown.com/wp-content/uploads/2022/03/Homemade-lasagna-1200x900.png'),
+    ('77777777-0007-0007-0007-000000000002', '22222222-0002-0002-0002-000000000001', 'Salmó a la planxa', 'Salmó amb llimona', 'segundo_plato', 0.250, 1, 20, 1, '33333333-0003-0003-0003-000000000001', 'https://restaurantezodiacbenidorm.es/wp-content/uploads/2023/04/foto-menu-sodiac-2025-17.jpg'),
+    ('77777777-0007-0007-0007-000000000003', '22222222-0002-0002-0002-000000000001', 'Amanida Cèsar',      'Amanida amb pollastre', 'entrante',      0.300, 1, 15, 1, '33333333-0003-0003-0003-000000000001', 'https://www.recetassinlactosa.com/wp-content/uploads/2022/02/Ensalada-Cesar.jpg'),
+    ('77777777-0007-0007-0007-000000000004', '22222222-0002-0002-0002-000000000001', 'Crema catalana',      'Postre tradicional', 'postre',        0.150, 1, 30, 1, '33333333-0003-0003-0003-000000000001', 'https://cdn.shopify.com/s/files/1/0191/9978/files/Crema_catalana__2.jpg?v=1772613489'),
+    ('77777777-0007-0007-0007-000000000005', '22222222-0002-0002-0002-000000000002', 'Pollastre al ajillo',     'Pollastre amb all',      'segundo_plato', 0.350, 1, 35, 1, '33333333-0003-0003-0003-000000000005', 'https://imag.bonviveur.com/pollo-al-ajillo-cerca.jpg'),
+    ('77777777-0007-0007-0007-000000000006', '22222222-0002-0002-0002-000000000002', 'Patates braves',      'Amb salsa brava',    'entrante',      0.200, 1, 25, 1, '33333333-0003-0003-0003-000000000005', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjI6ILVGts-ojbjlISsO9TYMt5uH7J8d6emg&s'),
+    ('77777777-0007-0007-0007-000000000007', '22222222-0002-0002-0002-000000000001', 'Salsa bechamel',      'Base per lasanya',   'salsa',         0.100, 4, 15, 1, '33333333-0003-0003-0003-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqFYuAMWBIGvD16MYj3FpGb8cfj-E-XUCSiQ&s'),
 
     -- Hamburguesas
-    ('77777777-0007-0007-0007-000000000078', '22222222-0002-0002-0002-000000000001', 'Hamburguesa de vedella', 'Amb ceba caramel·litzada, pa de brioix i formatge', 'segundo_plato', 0.300, 1, 15, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000079', '22222222-0002-0002-0002-000000000001', 'Hamburguesa de Rubia Gallega', 'Amb ceba caramel·litzada, pa de brioix i formatge', 'segundo_plato', 0.350, 1, 15, 1, '99999999-9999-9999-9999-000000000001'),
+    ('77777777-0007-0007-0007-000000000078', '22222222-0002-0002-0002-000000000001', 'Hamburguesa de vedella', 'Amb ceba caramel·litzada, pa de brioix i formatge', 'segundo_plato', 0.300, 1, 15, 1, '99999999-9999-9999-9999-000000000001', 'https://www.lacrianza.cl/wp-content/uploads/2023/05/mayo03m.jpg'),
+    ('77777777-0007-0007-0007-000000000079', '22222222-0002-0002-0002-000000000001', 'Hamburguesa de Rubia Gallega', 'Amb ceba caramel·litzada, pa de brioix i formatge', 'segundo_plato', 0.350, 1, 15, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvX-DmdjLk0OF2SeWMokvCDKzDJFBIVkBYBA&s'),
 
     -- Arrossos i Pasta
-    ('77777777-0007-0007-0007-000000000080', '22222222-0002-0002-0002-000000000001', 'Paella de marisc', 'Amb rap, sípia, gambes i musclos', 'segundo_plato', 0.400, 1, 25, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000081', '22222222-0002-0002-0002-000000000001', 'Arròs negre', 'Amb sípia i allioli', 'segundo_plato', 0.400, 1, 25, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000082', '22222222-0002-0002-0002-000000000001', 'Arròs caldós de llamàntol', '1/2 llamàntol per persona', 'segundo_plato', 0.500, 1, 30, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000083', '22222222-0002-0002-0002-000000000001', 'Arròs de verdures', 'Amb verdures de temporada', 'segundo_plato', 0.350, 1, 25, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000084', '22222222-0002-0002-0002-000000000001', 'Espaguetis', 'Amb gambes, all i bitxo', 'entrante', 0.250, 1, 15, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000085', '22222222-0002-0002-0002-000000000001', 'Tortellini de mató', 'Amb pesto, tomàquet i olives negres', 'primer_plato', 0.250, 1, 15, 1, '99999999-9999-9999-9999-000000000001'),
+    ('77777777-0007-0007-0007-000000000080', '22222222-0002-0002-0002-000000000001', 'Paella de marisc', 'Amb rap, sípia, gambes i musclos', 'segundo_plato', 0.400, 1, 25, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6d21nkaqdeydp_XKRcC3Ctd-yT_EbZjntqg&s'),
+    ('77777777-0007-0007-0007-000000000081', '22222222-0002-0002-0002-000000000001', 'Arròs negre', 'Amb sípia i allioli', 'segundo_plato', 0.400, 1, 25, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThCnTqUXxSCUfupLAvnpJHaHY97SHALbwEIA&s'),
+    ('77777777-0007-0007-0007-000000000082', '22222222-0002-0002-0002-000000000001', 'Arròs caldós de llamàntol', '1/2 llamàntol per persona', 'segundo_plato', 0.500, 1, 30, 1, '99999999-9999-9999-9999-000000000001', 'https://i.ytimg.com/vi/agFIXZBKobE/maxresdefault.jpg'),
+    ('77777777-0007-0007-0007-000000000083', '22222222-0002-0002-0002-000000000001', 'Arròs de verdures', 'Amb verdures de temporada', 'segundo_plato', 0.350, 1, 25, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8tzkKNWm8Ko5v0amTquG3V7DLLnM1BWMIsQ&s'),
+    ('77777777-0007-0007-0007-000000000084', '22222222-0002-0002-0002-000000000001', 'Espaguetis', 'Amb gambes, all i bitxo', 'entrante', 0.250, 1, 15, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQraWzRzWxTgz639gbMTRL_uxHAHsLhLQnKaA&s'),
+    ('77777777-0007-0007-0007-000000000085', '22222222-0002-0002-0002-000000000001', 'Tortellini de mató', 'Amb pesto, tomàquet i olives negres', 'primer_plato', 0.250, 1, 15, 1, '99999999-9999-9999-9999-000000000001', 'https://www.pequerecetas.com/wp-content/uploads/2022/09/tortellini-ricotta-y-espinacas-receta.jpg'),
     
     -- Cal Blay (Entrants i Tapes)
-    ('77777777-0007-0007-0007-000000000050', '22222222-0002-0002-0002-000000000001', 'Pernil D.O ibèric Los Pedroches', 'Tallat a mà', 'entrante', 0.150, 1, 5, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000051', '22222222-0002-0002-0002-000000000001', 'Anxoves dessalades a casa', 'Amb pa de coca (6u)', 'entrante', 0.200, 1, 10, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000052', '22222222-0002-0002-0002-000000000001', 'Bunyols de bacallà (8u)', 'La recepta clàssica', 'entrante', 0.250, 1, 15, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000053', '22222222-0002-0002-0002-000000000001', 'Croquetó de carn de perol', 'Tradicionals', 'entrante', 0.200, 1, 15, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000054', '22222222-0002-0002-0002-000000000001', 'La nostra ensaladilla cremosa', 'Amb ou ferrat i tonyina', 'entrante', 0.250, 1, 10, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000055', '22222222-0002-0002-0002-000000000001', 'Calamars a l''andalusa', 'Fregits', 'entrante', 0.300, 1, 15, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000056', '22222222-0002-0002-0002-000000000001', 'Mandonguilles amb sípia', 'Mar i muntanya', 'primer_plato', 0.350, 1, 40, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000057', '22222222-0002-0002-0002-000000000001', 'Ous estrellats', 'Amb patata, tòfona i foie', 'primer_plato', 0.400, 1, 20, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000058', '22222222-0002-0002-0002-000000000001', 'Tartar de tonyina Balfegó', 'Amb guacamole', 'entrante', 0.200, 1, 15, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000059', '22222222-0002-0002-0002-000000000001', 'Xató de Vilanova', 'Escarola, bacallà i romesco', 'entrante', 0.250, 1, 15, 1, '99999999-9999-9999-9999-000000000001'),
+    ('77777777-0007-0007-0007-000000000050', '22222222-0002-0002-0002-000000000001', 'Pernil D.O ibèric Los Pedroches', 'Tallat a mà', 'entrante', 0.150, 1, 5, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMv_yy8wMSk93BFV__Vcoh6YIZoUc_mW9j4g&s'),
+    ('77777777-0007-0007-0007-000000000051', '22222222-0002-0002-0002-000000000001', 'Anxoves dessalades a casa', 'Amb pa de coca (6u)', 'entrante', 0.200, 1, 10, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTybT_kYa0zuCDJOq10gUgUpVCvP1v2qHL7w&s'),
+    ('77777777-0007-0007-0007-000000000052', '22222222-0002-0002-0002-000000000001', 'Bunyols de bacallà (8u)', 'La recepta clàssica', 'entrante', 0.250, 1, 15, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTebsygjK3O2PD-PVlad9Nw9N8m7Q72LjnS4g&s'),
+    ('77777777-0007-0007-0007-000000000053', '22222222-0002-0002-0002-000000000001', 'Croquetó de carn de perol', 'Tradicionals', 'entrante', 0.200, 1, 15, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtsyhhSQMaiKkMIACltx82vMYzlW-RWdFEiw&s'),
+    ('77777777-0007-0007-0007-000000000054', '22222222-0002-0002-0002-000000000001', 'La nostra ensaladilla cremosa', 'Amb ou ferrat i tonyina', 'entrante', 0.250, 1, 10, 1, '99999999-9999-9999-9999-000000000001', 'https://ybarrachef.es/wp-content/uploads/2023/08/ensaladilla-rusa-receta-tradicional-scaled.jpg'),
+    ('77777777-0007-0007-0007-000000000055', '22222222-0002-0002-0002-000000000001', 'Calamars a l''andalusa', 'Fregits', 'entrante', 0.300, 1, 15, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSalDh6asdvxZ1SdBuzs44B1VRsx5p_Ay-xUA&s'),
+    ('77777777-0007-0007-0007-000000000056', '22222222-0002-0002-0002-000000000001', 'Mandonguilles amb sípia', 'Mar i muntanya', 'primer_plato', 0.350, 1, 40, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZdPIgi8yIKzyJATdApWdxP1VqM7y7wafD7Q&s'),
+    ('77777777-0007-0007-0007-000000000057', '22222222-0002-0002-0002-000000000001', 'Ous estrellats', 'Amb patata, tòfona i foie', 'primer_plato', 0.400, 1, 20, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTui05oSfOZr36JTXmPaJVwvwrszh0895DcoA&s'),
+    ('77777777-0007-0007-0007-000000000058', '22222222-0002-0002-0002-000000000001', 'Tartar de tonyina Balfegó', 'Amb guacamole', 'entrante', 0.200, 1, 15, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXJ1XekiCFEMKEcIKcGwFtgOPLvv5U0chokg&s'),
+    ('77777777-0007-0007-0007-000000000059', '22222222-0002-0002-0002-000000000001', 'Xató de Vilanova', 'Escarola, bacallà i romesco', 'entrante', 0.250, 1, 15, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmjOouuzTWKKZcrxbF8FByyIPFVFFyxpqY_Q&s'),
 
     -- Més Entrants
-    ('77777777-0007-0007-0007-000000000086', '22222222-0002-0002-0002-000000000001', 'Amanida de seitons en vinagre', 'Amb maduixes i formatge', 'entrante', 0.200, 1, 10, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000087', '22222222-0002-0002-0002-000000000001', 'Amanida de brots tendres', 'Amb cherry i formatge de cabra', 'entrante', 0.200, 1, 10, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000088', '22222222-0002-0002-0002-000000000001', 'Salmorejo', 'Amb pernil ibèric i ou dur', 'entrante', 0.250, 1, 10, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000089', '22222222-0002-0002-0002-000000000001', 'Empedrat de cigrons', 'Amb botifarra negra i pop', 'entrante', 0.250, 1, 10, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000090', '22222222-0002-0002-0002-000000000001', 'Musclos al vapor', 'Amb cítrics', 'entrante', 0.300, 1, 10, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000091', '22222222-0002-0002-0002-000000000001', 'Graellada de verdures', 'Amb salsa romesco', 'primer_plato', 0.300, 1, 15, 1, '99999999-9999-9999-9999-000000000001'),
+    ('77777777-0007-0007-0007-000000000086', '22222222-0002-0002-0002-000000000001', 'Amanida de seitons en vinagre', 'Amb maduixes i formatge', 'entrante', 0.200, 1, 10, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFOn8751-Q9wXsS1E9asOCRqcINeq7tawfug&s'),
+    ('77777777-0007-0007-0007-000000000087', '22222222-0002-0002-0002-000000000001', 'Amanida de brots tendres', 'Amb cherry i formatge de cabra', 'entrante', 0.200, 1, 10, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxFjb_JI9uywlXtaBg9ttOPbBxiV4qIqkDBg&s'),
+    ('77777777-0007-0007-0007-000000000088', '22222222-0002-0002-0002-000000000001', 'Salmorejo', 'Amb pernil ibèric i ou dur', 'entrante', 0.250, 1, 10, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDeeDgh6RoJJJFm2XVu3xa_Lb_MLd7NecqVQ&s'),
+    ('77777777-0007-0007-0007-000000000089', '22222222-0002-0002-0002-000000000001', 'Empedrat de cigrons', 'Amb botifarra negra i pop', 'entrante', 0.250, 1, 10, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6CCX1B6YngbBglV0H2vwOwV2tHMBkuORHjQ&s'),
+    ('77777777-0007-0007-0007-000000000090', '22222222-0002-0002-0002-000000000001', 'Musclos al vapor', 'Amb cítrics', 'entrante', 0.300, 1, 10, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLT__RsNCnx75LT2Gf2vOhjsBeeBZd4NB9Mw&s'),
+    ('77777777-0007-0007-0007-000000000091', '22222222-0002-0002-0002-000000000001', 'Graellada de verdures', 'Amb salsa romesco', 'primer_plato', 0.300, 1, 15, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqwP8WibEkWW0GZqUuKhZ6B0OSbkqhqP6GWw&s'),
     
     -- Cal Blay (Cassoles i Arrossos)
-    ('77777777-0007-0007-0007-000000000060', '22222222-0002-0002-0002-000000000001', 'Caneló de gall del Penedès', 'Amb crema de ceps', 'primer_plato', 0.350, 1, 40, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000061', '22222222-0002-0002-0002-000000000001', 'Fricandó de vedella', 'Tradicional amb moixernons', 'segundo_plato', 0.350, 1, 45, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000062', '22222222-0002-0002-0002-000000000001', 'Arròs del senyoret', 'Amb gambes, calamars i musclos', 'segundo_plato', 0.400, 1, 25, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000063', '22222222-0002-0002-0002-000000000001', 'Arròs d''ibèrics', 'Amb costella de porc Ral', 'segundo_plato', 0.400, 1, 25, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000064', '22222222-0002-0002-0002-000000000001', 'Arròs de gamba vermella', 'Amb sípia', 'segundo_plato', 0.400, 1, 25, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000065', '22222222-0002-0002-0002-000000000001', 'Suquet de peix', 'Lluç, musclos, gambes', 'segundo_plato', 0.450, 1, 30, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000066', '22222222-0002-0002-0002-000000000001', 'Mariscada', 'Gambes, escamarlans, llagostins', 'segundo_plato', 0.600, 1, 20, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000077', '22222222-0002-0002-0002-000000000001', 'Fideuà marinera', 'Amb allioli', 'segundo_plato', 0.400, 1, 25, 1, '99999999-9999-9999-9999-000000000001'),
+    ('77777777-0007-0007-0007-000000000060', '22222222-0002-0002-0002-000000000001', 'Caneló de gall del Penedès', 'Amb crema de ceps', 'primer_plato', 0.350, 1, 40, 1, '99999999-9999-9999-9999-000000000001', 'https://www.comprartrufanegra.es/wp-content/uploads/2020/09/Canelones-De-Pollo-Y-Verduras-Con-Trufa.jpg'),
+    ('77777777-0007-0007-0007-000000000061', '22222222-0002-0002-0002-000000000001', 'Fricandó de vedella', 'Tradicional amb moixernons', 'segundo_plato', 0.350, 1, 45, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHoiVxXz9pdTbtTZ4_Gbp301twKfIS7Wtr4A&s'),
+    ('77777777-0007-0007-0007-000000000062', '22222222-0002-0002-0002-000000000001', 'Arròs del senyoret', 'Amb gambes, calamars i musclos', 'segundo_plato', 0.400, 1, 25, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiL3rJ-93I0gR_esZNvtnFLO-0OX-Kc8s4eg&s'),
+    ('77777777-0007-0007-0007-000000000063', '22222222-0002-0002-0002-000000000001', 'Arròs d''ibèrics', 'Amb costella de porc Ral', 'segundo_plato', 0.400, 1, 25, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSIXSBrD1HBwqR6Zpq-sk2JV0NZXxmuI66XQ&s'),
+    ('77777777-0007-0007-0007-000000000064', '22222222-0002-0002-0002-000000000001', 'Arròs de gamba vermella', 'Amb sípia', 'segundo_plato', 0.400, 1, 25, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-IyWSqonr_6mu-V8njlx5-reT0LSIw8YhuA&s'),
+    ('77777777-0007-0007-0007-000000000065', '22222222-0002-0002-0002-000000000001', 'Suquet de peix', 'Lluç, musclos, gambes', 'segundo_plato', 0.450, 1, 30, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-HL2SGu6NZYaVGIhKTdEavER1aiYF4rXdog&s'),
+    ('77777777-0007-0007-0007-000000000066', '22222222-0002-0002-0002-000000000001', 'Mariscada', 'Gambes, escamarlans, llagostins', 'segundo_plato', 0.600, 1, 20, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHU7VWhAs2Fh5rF3WCDjpv8LBFFd9DIiK-sQ&s'),
+    ('77777777-0007-0007-0007-000000000077', '22222222-0002-0002-0002-000000000001', 'Fideuà marinera', 'Amb allioli', 'segundo_plato', 0.400, 1, 25, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSE90IYpA63DftalFWyak9c0rlURkhhGGLl_w&s'),
 
     -- Cal Blay (Carns, Peixos i Vegà)
-    ('77777777-0007-0007-0007-000000000067', '22222222-0002-0002-0002-000000000001', 'Bone in Rib-Eye Rubia Gallega', 'A la brasa (2 pax)', 'segundo_plato', 1.000, 2, 30, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000068', '22222222-0002-0002-0002-000000000001', 'Txuleton de 500g', 'Amb patates fregides', 'segundo_plato', 0.500, 1, 25, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000069', '22222222-0002-0002-0002-000000000001', 'Turbot a la brasa', 'Amb patata confitada', 'segundo_plato', 0.400, 1, 20, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000070', '22222222-0002-0002-0002-000000000001', 'Pop a la brasa', 'Amb cansalada i romesco', 'segundo_plato', 0.350, 1, 15, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000071', '22222222-0002-0002-0002-000000000001', 'Hamburguesa vegana d''Heura', 'Amb ceba caramel·litzada', 'segundo_plato', 0.300, 1, 15, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000072', '22222222-0002-0002-0002-000000000001', 'Albergínia farcida amb heura', 'Amb verdures', 'segundo_plato', 0.350, 1, 30, 1, '99999999-9999-9999-9999-000000000001'),
+    ('77777777-0007-0007-0007-000000000067', '22222222-0002-0002-0002-000000000001', 'Bone in Rib-Eye Rubia Gallega', 'A la brasa (2 pax)', 'segundo_plato', 1.000, 2, 30, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTnhRvpp7yAchGfR8Ho3QdbsP-53aMdYCy3lQ&s'),
+    ('77777777-0007-0007-0007-000000000068', '22222222-0002-0002-0002-000000000001', 'Txuleton de 500g', 'Amb patates fregides', 'segundo_plato', 0.500, 1, 25, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSANMgNa1QIzYP4hTHSgdLp41OHF72A0hQo1Q&s'),
+    ('77777777-0007-0007-0007-000000000069', '22222222-0002-0002-0002-000000000001', 'Turbot a la brasa', 'Amb patata confitada', 'segundo_plato', 0.400, 1, 20, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7RuDnV3urCWRsXTnrF4LA1siOxE8DB4nFDg&s'),
+    ('77777777-0007-0007-0007-000000000070', '22222222-0002-0002-0002-000000000001', 'Pop a la brasa', 'Amb cansalada i romesco', 'segundo_plato', 0.350, 1, 15, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtsV6rBXobFLA0H7gaG-BNNrSyfc5oMJz0Ew&s'),
+    ('77777777-0007-0007-0007-000000000071', '22222222-0002-0002-0002-000000000001', 'Hamburguesa vegana d''Heura', 'Amb ceba caramel·litzada', 'segundo_plato', 0.300, 1, 15, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRVEJsl9YzK8_slysorS0ezlStFO0VGRmtzA&s'),
+    ('77777777-0007-0007-0007-000000000072', '22222222-0002-0002-0002-000000000001', 'Albergínia farcida amb heura', 'Amb verdures', 'segundo_plato', 0.350, 1, 30, 1, '99999999-9999-9999-9999-000000000001', 'https://cdn3.myrealfood.app/s3-myrealfood/recipes/RZfkQxLFssptsGbi0pBZ/main.jpg'),
 
     -- Més Carns
-    ('77777777-0007-0007-0007-000000000092', '22222222-0002-0002-0002-000000000001', 'Magret d''ànec Collverd', 'A la brasa', 'segundo_plato', 0.350, 1, 20, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000093', '22222222-0002-0002-0002-000000000001', 'Graellada de carn', 'Xai, botifarra i pollastre', 'segundo_plato', 0.500, 1, 25, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000094', '22222222-0002-0002-0002-000000000001', 'Txurrasco macerat', 'Amb chimichurri', 'segundo_plato', 0.350, 1, 20, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000095', '22222222-0002-0002-0002-000000000001', 'Galta de porc', 'A la brasa', 'segundo_plato', 0.350, 1, 25, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000096', '22222222-0002-0002-0002-000000000001', 'Peus de porc a la brasa', 'Macerats al cava', 'segundo_plato', 0.400, 1, 25, 1, '99999999-9999-9999-9999-000000000001'),
+    ('77777777-0007-0007-0007-000000000092', '22222222-0002-0002-0002-000000000001', 'Magret d''ànec Collverd', 'A la brasa', 'segundo_plato', 0.350, 1, 20, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYx4TJLuAxjHsbrgBO9MOCKZFDdHIhb0mCZQ&s'),
+    ('77777777-0007-0007-0007-000000000093', '22222222-0002-0002-0002-000000000001', 'Graellada de carn', 'Xai, botifarra i pollastre', 'segundo_plato', 0.500, 1, 25, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwD8lR35mNFOdcz3BXMFjoWIaAmO93gQ_bNQ&s'),
+    ('77777777-0007-0007-0007-000000000094', '22222222-0002-0002-0002-000000000001', 'Txurrasco macerat', 'Amb chimichurri', 'segundo_plato', 0.350, 1, 20, 1, '99999999-9999-9999-9999-000000000001', 'https://cdn-ilddihb.nitrocdn.com/MgqZCGPEMHvMRLsisMUCAIMWvgGMxqaj/assets/images/optimized/rev-19cbad0/www.goya.com/wp-content/uploads/2016/02/argentinian-grilled-steaks-with-salsa-criolla-900x900.jpg'),
+    ('77777777-0007-0007-0007-000000000095', '22222222-0002-0002-0002-000000000001', 'Galta de porc', 'A la brasa', 'segundo_plato', 0.350, 1, 25, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoWY8Kk5vaNAaDduM7IsK2YfHl2gD3hF82bg&s'),
+    ('77777777-0007-0007-0007-000000000096', '22222222-0002-0002-0002-000000000001', 'Peus de porc a la brasa', 'Macerats al cava', 'segundo_plato', 0.400, 1, 25, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSw1sC7QKgPPc41bcUPzcZrbE4NDg11i5EKFg&s'),
 
     -- Més Peixos
-    ('77777777-0007-0007-0007-000000000097', '22222222-0002-0002-0002-000000000001', 'Calamarcets a la planxa', 'Amb verdures i romesco', 'segundo_plato', 0.300, 1, 15, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000098', '22222222-0002-0002-0002-000000000001', 'Llom de lluç a l''Orio', 'Amb patata confitada', 'segundo_plato', 0.300, 1, 20, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000099', '22222222-0002-0002-0002-000000000001', 'Bacallà amb samfaina', 'De verdures', 'segundo_plato', 0.350, 1, 20, 1, '99999999-9999-9999-9999-000000000001'),
+    ('77777777-0007-0007-0007-000000000097', '22222222-0002-0002-0002-000000000001', 'Calamarcets a la planxa', 'Amb verdures i romesco', 'segundo_plato', 0.300, 1, 15, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9nLItZ4D0V9HSkZRcoZBXkfUkre1SpZ5Mbw&s'),
+    ('77777777-0007-0007-0007-000000000098', '22222222-0002-0002-0002-000000000001', 'Llom de lluç a l''Orio', 'Amb patata confitada', 'segundo_plato', 0.300, 1, 20, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTneBIa6E8rR2VMrEeZayHSTPruCbkt9xawRw&s'),
+    ('77777777-0007-0007-0007-000000000099', '22222222-0002-0002-0002-000000000001', 'Bacallà amb samfaina', 'De verdures', 'segundo_plato', 0.350, 1, 20, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTo4cralRjCe_k-qC04NeAiZCT5jjLZFONQbg&s'),
 
     -- Cal Blay (Postres)
-    ('77777777-0007-0007-0007-000000000073', '22222222-0002-0002-0002-000000000001', 'Pastís de formatge cremós', 'El nostre cheesecake', 'postre', 0.150, 1, 10, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000074', '22222222-0002-0002-0002-000000000001', 'Lionesa XL farcida de nata', 'Amb xocolata Cal Simón 70%', 'postre', 0.150, 1, 10, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000075', '22222222-0002-0002-0002-000000000001', 'Tiramisú', 'Recepta autèntica italiana', 'postre', 0.150, 1, 10, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000076', '22222222-0002-0002-0002-000000000001', 'Carpaccio de pinya', 'Amb gelat de coco', 'postre', 0.150, 1, 10, 1, '99999999-9999-9999-9999-000000000001'),
+    ('77777777-0007-0007-0007-000000000073', '22222222-0002-0002-0002-000000000001', 'Pastís de formatge cremós', 'El nostre cheesecake', 'postre', 0.150, 1, 10, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6247QhL0eOYIlqvAVSFIopeLd8HJUVVg7bg&s'),
+    ('77777777-0007-0007-0007-000000000074', '22222222-0002-0002-0002-000000000001', 'Lionesa XL farcida de nata', 'Amb xocolata Cal Simón 70%', 'postre', 0.150, 1, 10, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_LBmehJ0ogMRMTw3TOvAYmT8vwapTVSKLFw&s'),
+    ('77777777-0007-0007-0007-000000000075', '22222222-0002-0002-0002-000000000001', 'Tiramisú', 'Recepta autèntica italiana', 'postre', 0.150, 1, 10, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTf5BD6qQjwF3aOQpBhY8ANMtxMnW13JLMUjw&s'),
+    ('77777777-0007-0007-0007-000000000076', '22222222-0002-0002-0002-000000000001', 'Carpaccio de pinya', 'Amb gelat de coco', 'postre', 0.150, 1, 10, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhaYpa_iO8d3ZFja2b4Zf3cTrYumFgI8PT6Q&s'),
 
     -- Més Postres
-    ('77777777-0007-0007-0007-000000000100', '22222222-0002-0002-0002-000000000001', 'Pastís de xocolata 70%', 'Simón Coll', 'postre', 0.150, 1, 10, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000101', '22222222-0002-0002-0002-000000000001', 'Poma tatin', 'Amb crumble i gelat', 'postre', 0.150, 1, 15, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000102', '22222222-0002-0002-0002-000000000001', 'Flam d''avellanes', 'Amb nata', 'postre', 0.150, 1, 10, 1, '99999999-9999-9999-9999-000000000001'),
-    ('77777777-0007-0007-0007-000000000103', '22222222-0002-0002-0002-000000000001', 'Gelats artesans', 'Sabors variats', 'postre', 0.150, 1, 5, 1, '99999999-9999-9999-9999-000000000001')
+    ('77777777-0007-0007-0007-000000000100', '22222222-0002-0002-0002-000000000001', 'Pastís de xocolata 70%', 'Simón Coll', 'postre', 0.150, 1, 10, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7zGhNaY5vLk5OPVd-TSetbGo0ypx--f_kxw&s'),
+    ('77777777-0007-0007-0007-000000000101', '22222222-0002-0002-0002-000000000001', 'Poma tatin', 'Amb crumble i gelat', 'postre', 0.150, 1, 15, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTccVHZ1G07iL744JUenb1u590OIiK_IaZ24w&s'),
+    ('77777777-0007-0007-0007-000000000102', '22222222-0002-0002-0002-000000000001', 'Flam d''avellanes', 'Amb nata', 'postre', 0.150, 1, 10, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQlUp2NB9saUVTkqhzZGNwTS26BUyxBOU6eg&s'),
+    ('77777777-0007-0007-0007-000000000103', '22222222-0002-0002-0002-000000000001', 'Gelats artesans', 'Sabors variats', 'postre', 0.150, 1, 5, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSP-LqU224LsONo6agXEC7QW_r-nZMwGA8GJQ&s'),
+    
+    -- Plats lliures d'al·lèrgens (Comodins Demo)
+    ('77777777-0007-0007-0007-000000000104', '22222222-0002-0002-0002-000000000001', 'Amanida de quinoa i alvocat', 'Amb tomàquet cherry i vinagreta.', 'entrante', 0.250, 1, 15, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTdgyGgUiBRFx6w6H4mpbu8wE1-5JvY2cb3Q&s'),
+    
+    ('77777777-0007-0007-0007-000000000105', '22222222-0002-0002-0002-000000000001', 'Crema de carbassa i llet de coco', 'Cremosa, vegana i apta per a celíacs.', 'primer_plato', 0.300, 1, 20, 1, '99999999-9999-9999-9999-000000000001', 'https://tofusalvaje.com/wp-content/uploads/2020/06/crema-calabaza-W-1.jpg'),
+    
+    ('77777777-0007-0007-0007-000000000106', '22222222-0002-0002-0002-000000000001', 'Timbal de patata i ceba confitada', 'Plat tradicional suau i cuinat a foc lent', 'entrante', 0.250, 1, 25, 1, '99999999-9999-9999-9999-000000000001', 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjSYO4n7m7c3G2y4Ge06uZr2PTvLw_rwwKLFjH2_MriiBZXemCNhyphenhyphen3gxz09uwD1I0mRg8koJtYxDtPTneuirLWo3zJqg0QduHvzJvPraYcpKk3nDNhpupbZrKYix_LFbzpveOzQ8X6RtTZv/s1600/P7310028.JPG')
+    
 ON CONFLICT DO NOTHING;
 
 -- ============================================================================
@@ -362,7 +370,21 @@ INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unit, is_opt
     ('77777777-0007-0007-0007-000000000100', '11111111-0001-0001-0001-000000000003', 0.100, 'l',  FALSE), -- Pastís xoco -> Làctics
     ('77777777-0007-0007-0007-000000000101', '11111111-0001-0001-0001-000000000001', 0.100, 'kg', FALSE), -- Poma tatin -> Farina (crumble)
     ('77777777-0007-0007-0007-000000000102', '11111111-0001-0001-0001-000000000003', 0.100, 'l',  FALSE), -- Flam -> Làctics
-    ('77777777-0007-0007-0007-000000000103', '11111111-0001-0001-0001-000000000003', 0.150, 'l',  FALSE)  -- Gelats -> Làctics
+    ('77777777-0007-0007-0007-000000000103', '11111111-0001-0001-0001-000000000003', 0.150, 'l',  FALSE),  -- Gelats -> Làctics
+    
+    -- Amanida de quinoa
+    ('77777777-0007-0007-0007-000000000104', '11111111-0001-0001-0001-000000000005', 0.100, 'kg', FALSE), -- Tomàquet
+    ('77777777-0007-0007-0007-000000000104', '11111111-0001-0001-0001-000000000008', 0.015, 'l',  FALSE), -- Oli d'oliva
+    
+    -- Crema de carbassa 
+    ('77777777-0007-0007-0007-000000000105', '11111111-0001-0001-0001-000000000006', 0.100, 'kg', FALSE), -- Ceba
+    ('77777777-0007-0007-0007-000000000105', '11111111-0001-0001-0001-000000000008', 0.020, 'l',  FALSE),  -- Oli d'oliva
+    
+    -- Timbal de patata i ceba
+    ('77777777-0007-0007-0007-000000000106', '11111111-0001-0001-0001-000000000019', 0.200, 'kg', FALSE), -- Patata
+    ('77777777-0007-0007-0007-000000000106', '11111111-0001-0001-0001-000000000006', 0.050, 'kg', FALSE), -- Ceba
+    ('77777777-0007-0007-0007-000000000106', '11111111-0001-0001-0001-000000000008', 0.015, 'l',  FALSE)  -- Oli d'oliva
+    
 ON CONFLICT DO NOTHING;
 
 -- ============================================================================
@@ -536,6 +558,8 @@ INSERT INTO recipe_allergens (recipe_id, allergen_id, is_manual, contains) VALUE
     ('77777777-0007-0007-0007-000000000102', (SELECT id FROM allergens WHERE code='HUE'), TRUE, TRUE),
     ('77777777-0007-0007-0007-000000000102', (SELECT id FROM allergens WHERE code='FRU'), TRUE, TRUE),
     ('77777777-0007-0007-0007-000000000103', (SELECT id FROM allergens WHERE code='LAC'), TRUE, TRUE)
+    
+    -- Plats afegits sense al·lèrgens no cal falggejar
 ON CONFLICT DO NOTHING;
 
 -- ============================================================================
