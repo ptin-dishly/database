@@ -29,26 +29,26 @@ ON CONFLICT (code) DO NOTHING;
 -- ============================================================================
 INSERT INTO ingredients (id, name, description, is_active) VALUES
     -- Originales
-    ('11111111-0001-0001-0001-000000000001', 'Harina de trigo',    'Harina de trigo común',         TRUE),
-    ('11111111-0001-0001-0001-000000000002', 'Huevo',              'Huevo fresco de gallina',       TRUE),
-    ('11111111-0001-0001-0001-000000000003', 'Leche entera',       'Leche entera pasteurizada',     TRUE),
-    ('11111111-0001-0001-0001-000000000004', 'Mantequilla',        'Mantequilla sin sal',           TRUE),
-    ('11111111-0001-0001-0001-000000000005', 'Tomate',             'Tomate fresco maduro',          TRUE),
-    ('11111111-0001-0001-0001-000000000006', 'Cebolla',            'Cebolla blanca',                TRUE),
-    ('11111111-0001-0001-0001-000000000007', 'Ajo',                'Ajo fresco',                    TRUE),
-    ('11111111-0001-0001-0001-000000000008', 'Aceite de oliva',    'Aceite de oliva virgen extra',  TRUE),
+    ('11111111-0001-0001-0001-000000000001', 'Farina de blat',     'Farina de blat comuna',         TRUE),
+    ('11111111-0001-0001-0001-000000000002', 'Ou',                 'Ou fresc de gallina',           TRUE),
+    ('11111111-0001-0001-0001-000000000003', 'Llet sencera',       'Llet sencera pasteuritzada',    TRUE),
+    ('11111111-0001-0001-0001-000000000004', 'Mantega',            'Mantega sense sal',             TRUE),
+    ('11111111-0001-0001-0001-000000000005', 'Tomàquet',           'Tomàquet fresc madur',          TRUE),
+    ('11111111-0001-0001-0001-000000000006', 'Ceba',               'Ceba blanca',                   TRUE),
+    ('11111111-0001-0001-0001-000000000007', 'All',                'All fresc',                     TRUE),
+    ('11111111-0001-0001-0001-000000000008', 'Oli d''oliva',       'Oli d''oliva verge extra',      TRUE),
     ('11111111-0001-0001-0001-000000000009', 'Sal',                'Sal marina',                    TRUE),
-    ('11111111-0001-0001-0001-000000000010', 'Pimienta negra',     'Pimienta negra molida',         TRUE),
-    ('11111111-0001-0001-0001-000000000011', 'Pechuga de pollo',   'Pechuga de pollo fresca',       TRUE),
-    ('11111111-0001-0001-0001-000000000012', 'Salmón fresco',      'Salmón atlántico fresco',       TRUE),
-    ('11111111-0001-0001-0001-000000000013', 'Pasta lasaña',       'Láminas de pasta para lasaña',  TRUE),
-    ('11111111-0001-0001-0001-000000000014', 'Carne picada mixta', 'Mezcla de cerdo y ternera',     TRUE),
-    ('11111111-0001-0001-0001-000000000015', 'Queso parmesano',    'Parmigiano Reggiano',           TRUE),
-    ('11111111-0001-0001-0001-000000000016', 'Nata líquida',       'Nata para cocinar 35% MG',      TRUE),
-    ('11111111-0001-0001-0001-000000000017', 'Limón',              'Limón fresco',                  TRUE),
-    ('11111111-0001-0001-0001-000000000018', 'Perejil',            'Perejil fresco',                TRUE),
-    ('11111111-0001-0001-0001-000000000019', 'Patata',             'Patata agria',                  TRUE),
-    ('11111111-0001-0001-0001-000000000020', 'Azúcar',             'Azúcar blanco refinado',        TRUE),
+    ('11111111-0001-0001-0001-000000000010', 'Pebre negre',        'Pebre negre mòlt',              TRUE),
+    ('11111111-0001-0001-0001-000000000011', 'Pit de pollastre',   'Pit de pollastre fresc',        TRUE),
+    ('11111111-0001-0001-0001-000000000012', 'Salmó fresc',        'Salmó atlàntic fresc',          TRUE),
+    ('11111111-0001-0001-0001-000000000013', 'Pasta de lasanya',   'Làmines de pasta per a lasanya', TRUE),
+    ('11111111-0001-0001-0001-000000000014', 'Carn picada mixta',  'Barreja de porc i vedella',     TRUE),
+    ('11111111-0001-0001-0001-000000000015', 'Formatge parmesà',   'Parmigiano Reggiano',           TRUE),
+    ('11111111-0001-0001-0001-000000000016', 'Nata líquida',       'Nata per cuinar 35% MG',        TRUE),
+    ('11111111-0001-0001-0001-000000000017', 'Llimona',            'Llimona fresca',                TRUE),
+    ('11111111-0001-0001-0001-000000000018', 'Julivert',           'Julivert fresc',                TRUE),
+    ('11111111-0001-0001-0001-000000000019', 'Patata',             'Patata agra',                   TRUE),
+    ('11111111-0001-0001-0001-000000000020', 'Sucre',              'Sucre blanc refinat',           TRUE),
     -- Genéricos Cal Blay para no romper FKs
     ('11111111-0001-0001-0001-000000000021', 'Peix Fresc',         'Llobarro, salmó, tonyina...',   TRUE),
     ('11111111-0001-0001-0001-000000000022', 'Marisc',             'Gambes, escamarlans, musclos',  TRUE),
@@ -152,9 +152,9 @@ INSERT INTO recipes (id, establishment_id, name, description, category, portion_
     ('77777777-0007-0007-0007-000000000002', '22222222-0002-0002-0002-000000000001', 'Salmó a la planxa', 'Salmó amb llimona', 'segundo_plato', 0.250, 1, 20, 1, '33333333-0003-0003-0003-000000000001', 'https://restaurantezodiacbenidorm.es/wp-content/uploads/2023/04/foto-menu-sodiac-2025-17.jpg'),
     ('77777777-0007-0007-0007-000000000003', '22222222-0002-0002-0002-000000000001', 'Amanida Cèsar',      'Amanida amb pollastre', 'entrante',      0.300, 1, 15, 1, '33333333-0003-0003-0003-000000000001', 'https://www.recetassinlactosa.com/wp-content/uploads/2022/02/Ensalada-Cesar.jpg'),
     ('77777777-0007-0007-0007-000000000004', '22222222-0002-0002-0002-000000000001', 'Crema catalana',      'Postre tradicional', 'postre',        0.150, 1, 30, 1, '33333333-0003-0003-0003-000000000001', 'https://cdn.shopify.com/s/files/1/0191/9978/files/Crema_catalana__2.jpg?v=1772613489'),
-    ('77777777-0007-0007-0007-000000000005', '22222222-0002-0002-0002-000000000002', 'Pollastre al ajillo',     'Pollastre amb all',      'segundo_plato', 0.350, 1, 35, 1, '33333333-0003-0003-0003-000000000005', 'https://imag.bonviveur.com/pollo-al-ajillo-cerca.jpg'),
+    ('77777777-0007-0007-0007-000000000005', '22222222-0002-0002-0002-000000000002', 'Pollastre a l''all',      'Pollastre amb all',      'segundo_plato', 0.350, 1, 35, 1, '33333333-0003-0003-0003-000000000005', 'https://imag.bonviveur.com/pollo-al-ajillo-cerca.jpg'),
     ('77777777-0007-0007-0007-000000000006', '22222222-0002-0002-0002-000000000002', 'Patates braves',      'Amb salsa brava',    'entrante',      0.200, 1, 25, 1, '33333333-0003-0003-0003-000000000005', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjI6ILVGts-ojbjlISsO9TYMt5uH7J8d6emg&s'),
-    ('77777777-0007-0007-0007-000000000007', '22222222-0002-0002-0002-000000000001', 'Salsa bechamel',      'Base per lasanya',   'salsa',         0.100, 4, 15, 1, '33333333-0003-0003-0003-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqFYuAMWBIGvD16MYj3FpGb8cfj-E-XUCSiQ&s'),
+    ('77777777-0007-0007-0007-000000000007', '22222222-0002-0002-0002-000000000001', 'Salsa beixamel',      'Base per a lasanya',   'salsa',         0.100, 4, 15, 1, '33333333-0003-0003-0003-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqFYuAMWBIGvD16MYj3FpGb8cfj-E-XUCSiQ&s'),
 
     -- Hamburguesas
     ('77777777-0007-0007-0007-000000000078', '22222222-0002-0002-0002-000000000001', 'Hamburguesa de vedella', 'Amb ceba caramel·litzada, pa de brioix i formatge', 'segundo_plato', 0.300, 1, 15, 1, '99999999-9999-9999-9999-000000000001', 'https://www.lacrianza.cl/wp-content/uploads/2023/05/mayo03m.jpg'),
@@ -243,16 +243,16 @@ ON CONFLICT DO NOTHING;
 -- 10. RECIPE STEPS (Mantenemos los originales)
 -- ============================================================================
 INSERT INTO recipe_steps (recipe_id, step_number, instruction, duration) VALUES
-    ('77777777-0007-0007-0007-000000000001', 1, 'Preparar la salsa bechamel con mantequilla, harina y leche', 15),
-    ('77777777-0007-0007-0007-000000000001', 2, 'Sofreír la cebolla y el ajo, añadir la carne picada y cocinar', 15),
-    ('77777777-0007-0007-0007-000000000001', 3, 'Añadir el tomate triturado y cocinar la boloñesa 10 minutos', 10),
-    ('77777777-0007-0007-0007-000000000001', 4, 'Montar la lasaña en capas y gratinar en el horno a 200°C', 20),
-    ('77777777-0007-0007-0007-000000000002', 1, 'Salpimentar el salmón y marinar con limón 5 minutos', 5),
-    ('77777777-0007-0007-0007-000000000002', 2, 'Cocinar a la plancha 4 minutos por cada lado', 8),
-    ('77777777-0007-0007-0007-000000000002', 3, 'Servir con perejil picado y rodaja de limón', 2),
-    ('77777777-0007-0007-0007-000000000004', 1, 'Mezclar yemas de huevo con azúcar y leche caliente', 10),
-    ('77777777-0007-0007-0007-000000000004', 2, 'Cocer a fuego lento hasta espesar', 15),
-    ('77777777-0007-0007-0007-000000000004', 3, 'Enfriar y caramelizar el azúcar con soplete', 5)
+    ('77777777-0007-0007-0007-000000000001', 1, 'Preparar la salsa beixamel amb mantega, farina i llet', 15),
+    ('77777777-0007-0007-0007-000000000001', 2, 'Sofregir la ceba i l''all, afegir la carn picada i coure', 15),
+    ('77777777-0007-0007-0007-000000000001', 3, 'Afegir el tomàquet triturat i coure la bolonyesa 10 minuts', 10),
+    ('77777777-0007-0007-0007-000000000001', 4, 'Muntar la lasanya en capes i gratinar al forn a 200°C', 20),
+    ('77777777-0007-0007-0007-000000000002', 1, 'Salpebrar el salmó i marinar amb llimona 5 minuts', 5),
+    ('77777777-0007-0007-0007-000000000002', 2, 'Coure a la planxa 4 minuts per cada costat', 8),
+    ('77777777-0007-0007-0007-000000000002', 3, 'Servir amb julivert picat i una rodanxa de llimona', 2),
+    ('77777777-0007-0007-0007-000000000004', 1, 'Barrejar rovells d''ou amb sucre i llet calenta', 10),
+    ('77777777-0007-0007-0007-000000000004', 2, 'Coure a foc lent fins que espesseixi', 15),
+    ('77777777-0007-0007-0007-000000000004', 3, 'Refredar i caramel·litzar el sucre amb bufador', 5)
 ON CONFLICT DO NOTHING;
 
 -- ============================================================================
@@ -601,7 +601,7 @@ ON CONFLICT DO NOTHING;
 -- ============================================================================
 INSERT INTO menu_cards (id, establishment_id, name, is_public) VALUES
     ('99999999-0009-0009-0009-000000000001', '22222222-0002-0002-0002-000000000001', 'Carta Principal Temporada', TRUE),
-    ('99999999-0009-0009-0009-000000000002', '22222222-0002-0002-0002-000000000001', 'Menú del Día',              TRUE),
+    ('99999999-0009-0009-0009-000000000002', '22222222-0002-0002-0002-000000000001', 'Menú del Dia',              TRUE),
     ('99999999-0009-0009-0009-000000000003', '22222222-0002-0002-0002-000000000002', 'Carta El Racó',             TRUE),
     ('99999999-0009-0009-0009-000000000004', '22222222-0002-0002-0002-000000000001', 'Gran Carta Cal Blay',       TRUE)
 ON CONFLICT DO NOTHING;
@@ -695,21 +695,21 @@ INSERT INTO order_items (order_id, recipe_id, menu_card_item_id, comensal_id, se
         '77777777-0007-0007-0007-000000000003',
         (SELECT id FROM menu_card_items WHERE menu_card_id='99999999-0009-0009-0009-000000000001' AND recipe_id='77777777-0007-0007-0007-000000000003'),
         'bbbbbbbb-000b-000b-000b-000000000001', '66666666-0006-0006-0006-000000000009',
-        1, 'Ensalada César', FALSE, 'confirmed'
+        1, 'Amanida Cèsar', FALSE, 'confirmed'
     ),
     (
         'cccccccc-000c-000c-000c-000000000001',
         '77777777-0007-0007-0007-000000000002',
         (SELECT id FROM menu_card_items WHERE menu_card_id='99999999-0009-0009-0009-000000000001' AND recipe_id='77777777-0007-0007-0007-000000000002'),
         'bbbbbbbb-000b-000b-000b-000000000001', '66666666-0006-0006-0006-000000000009',
-        1, 'Salmón a la plancha', FALSE, 'confirmed'
+        1, 'Salmó a la planxa', FALSE, 'confirmed'
     ),
     (
         'cccccccc-000c-000c-000c-000000000002',
         '77777777-0007-0007-0007-000000000001',
         NULL,
         NULL, '66666666-0006-0006-0006-000000000001',
-        1, 'Lasaña de carne', FALSE, 'pending'
+        1, 'Lasanya de carn', FALSE, 'pending'
     )
 ON CONFLICT DO NOTHING;
 
