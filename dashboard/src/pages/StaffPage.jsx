@@ -9,8 +9,10 @@
  * 3. Ranking de Rendimiento: clasificación de camareros basada en los ingresos que han generado hoy.
  */
 
+import { useState, useEffect } from 'react'
 import StatCard from '../components/StatCard'
 import Panel from '../components/Panel'
+import { getStaff, getStaffPerformance, getStaffZones, getStaffActivityLog, getAllergenAlerts } from '../api'
 import './StaffPage.css'
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -42,7 +44,104 @@ const recentActivity = [
   { id: 4, time: '13:50', user: 'Laura S.', action: 'Tomó pedido VIP #1041 (280€)', type: 'success' },
 ]
 
-function StaffPage() {
+function StaffPage({ establishmentId, date }) {
+  const [staffCount, setStaffCount] = useState("0")
+  const [trendLabel, setTrendLabel] = useState("")
+  const [staffPerformanceData, setStaffPerformanceData] = useState(staffPerformance)
+  const [zoneAssignmentsData, setZoneAssignmentsData] = useState(zoneAssignments)
+  const [recentActivityData, setRecentActivityData] = useState(recentActivity)
+  
+  // KPIs
+  const [totalOrders, setTotalOrders] = useState("0")
+  const [avgTicket, setAvgTicket] = useState("0.00€")
+  const [alertsResolved, setAlertsResolved] = useState("0%")
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const staff = await getStaff()
+        if (staff && staff.length > 0) {
+          const waiters = staff.filter(s => s.role === 'waiter')
+          setStaffCount(waiters.length.toString())
+          setTrendLabel("Camareros en BD")
+        } else {
+          setStaffCount("0")
+          setTrendLabel("Sin datos")
+        }
+
+        const perf = await getStaffPerformance(establishmentId, date)
+        if (perf && perf.length > 0) {
+          let totOrders = 0;
+          let totRev = 0;
+          const sortedPerf = [...perf].sort((a, b) => Number(b.revenue_generated) - Number(a.revenue_generated))
+          setStaffPerformanceData(sortedPerf.map((p, i) => {
+            const ords = Number(p.orders_served);
+            const rev = Number(p.revenue_generated);
+            totOrders += ords;
+            totRev += rev;
+            return {
+              rank: i + 1,
+              id: p.user_id,
+              name: p.waiter_name,
+              orders: ords,
+              revenue: rev,
+              upselling: staffPerformance[i % staffPerformance.length]?.upselling || '+0%',
+              avgTime: staffPerformance[i % staffPerformance.length]?.avgTime || '15m'
+            }
+          }))
+          
+          setTotalOrders(totOrders.toString());
+          if (totOrders > 0) {
+            setAvgTicket((totRev / totOrders).toFixed(2) + '€');
+          }
+        } else {
+          setStaffPerformanceData([])
+          setTotalOrders("0")
+          setAvgTicket("0.00€")
+        }
+
+        const zones = await getStaffZones(establishmentId, date)
+        if (zones && zones.length > 0) {
+          setZoneAssignmentsData(zones.map(z => ({
+            id: z.id,
+            room: z.room_name,
+            waiter: z.waiter_name,
+            avatar: z.waiter_name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase(),
+            tablesAssigned: Number(z.tables_assigned),
+            activeTables: Number(z.active_tables),
+            status: z.status
+          })))
+        } else {
+          setZoneAssignmentsData([])
+        }
+
+        const activity = await getStaffActivityLog(establishmentId, date)
+        if (activity && activity.length > 0) {
+          setRecentActivityData(activity.map(a => ({
+            id: a.id,
+            time: new Date(a.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+            user: a.user_name || 'Sistema',
+            action: a.action,
+            type: a.type
+          })))
+        } else {
+          setRecentActivityData([])
+        }
+
+        const alerts = await getAllergenAlerts(establishmentId, date)
+        if (alerts && alerts.length > 0) {
+          const resolved = alerts.filter(a => a.is_resolved).length;
+          setAlertsResolved(`${Math.round((resolved / alerts.length) * 100)}%`)
+        } else {
+          setAlertsResolved("0%")
+        }
+      } catch (err) {
+        console.error("Error fetching staff", err)
+      }
+    }
+    loadData()
+  }, [establishmentId, date])
+
   const getRankClass = (rank) => {
     if (rank === 1) return 'gold'
     if (rank === 2) return 'silver'
@@ -69,37 +168,37 @@ function StaffPage() {
         <StatCard
           icon="👥"
           label="Personal en Turno"
-          value="4"
+          value={staffCount}
           trend="neutral"
           trendValue="1 zona sin asignar"
-          trendLabel=""
+          trendLabel={trendLabel}
           accentColor="#3b82f6"
         />
         <StatCard
           icon="🍽️"
           label="Pedidos Atendidos"
-          value="123"
-          trend="up"
-          trendValue="+14"
-          trendLabel="vs. ayer"
+          value={totalOrders}
+          trend="neutral"
+          trendValue="Tiempo real"
+          trendLabel={trendLabel}
           accentColor="#10b981"
         />
         <StatCard
           icon="💶"
-          label="Ticket Medio / Camarero"
-          value="34.15€"
-          trend="up"
-          trendValue="+2.10€"
-          trendLabel="por mejora en upselling"
+          label="Ticket Medio / Pedido"
+          value={avgTicket}
+          trend="neutral"
+          trendValue="Tiempo real"
+          trendLabel={trendLabel}
           accentColor="#8b5cf6"
         />
         <StatCard
           icon="✅"
           label="Alertas Resueltas"
-          value="100%"
-          trend="up"
-          trendValue="12 alertas"
-          trendLabel="gestionadas hoy"
+          value={alertsResolved}
+          trend="neutral"
+          trendValue="Tiempo real"
+          trendLabel={trendLabel}
           accentColor="#14b8a6"
         />
       </div>
@@ -118,7 +217,7 @@ function StaffPage() {
             subtitle="Carga de trabajo por sala"
           >
             <div className="zone-assignments-list">
-              {zoneAssignments.map(zone => (
+              {zoneAssignmentsData.map(zone => (
                 <div key={zone.id} className={`zone-card ${zone.status}`}>
                   <div className="zone-info">
                     <h4 className="zone-name">{zone.room}</h4>
@@ -146,7 +245,7 @@ function StaffPage() {
             subtitle="Últimas acciones del personal"
           >
             <div className="activity-timeline">
-              {recentActivity.map(item => (
+              {recentActivityData.map(item => (
                 <div key={item.id} className="activity-item">
                   <div className="activity-time">{item.time}</div>
                   <div className={`activity-dot ${item.type}`}></div>
@@ -168,7 +267,7 @@ function StaffPage() {
             subtitle="Camareros clasificados por ingresos generados"
           >
             <div className="performance-ranking">
-              {staffPerformance.map(staff => (
+              {staffPerformanceData.map(staff => (
                 <div key={staff.id} className="ranking-card">
                   <div className="ranking-left">
                     <div className={`ranking-position panel-list-item-rank ${getRankClass(staff.rank)}`}>

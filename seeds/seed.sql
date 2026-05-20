@@ -807,3 +807,36 @@ INSERT INTO waiter_zones (user_id, room_id, notes) VALUES
     ('33333333-0003-0003-0003-000000000002', '44444444-0004-0004-0004-000000000001', 'Cambrer Principal a la Sala d''Arrossos'),
     ('99999999-9999-9999-9999-000000000003', '44444444-0004-0004-0004-000000000002', 'Test Waiter a la Terrassa')
 ON CONFLICT DO NOTHING;
+-- ============================================================================
+-- 24. ORDER STATUS HISTORY (Fake data for testing)
+-- ============================================================================
+INSERT INTO order_status_history (order_id, old_status, new_status, changed_at) VALUES
+    ('cccccccc-000c-000c-000c-000000000001', NULL, 'pending', NOW() - INTERVAL '40 minutes'),
+    ('cccccccc-000c-000c-000c-000000000001', 'pending', 'confirmed', NOW() - INTERVAL '38 minutes'),
+    ('cccccccc-000c-000c-000c-000000000001', 'confirmed', 'preparing', NOW() - INTERVAL '30 minutes'),
+    ('cccccccc-000c-000c-000c-000000000001', 'preparing', 'served', NOW() - INTERVAL '15 minutes'),
+    
+    ('cccccccc-000c-000c-000c-000000000002', NULL, 'pending', NOW() - INTERVAL '10 minutes')
+ON CONFLICT DO NOTHING;
+
+-- ============================================================================
+-- 25. WAITER ZONES
+-- ============================================================================
+INSERT INTO waiter_zones (user_id, room_id) VALUES
+    ('33333333-0003-0003-0003-000000000002', '44444444-0004-0004-0004-000000000001'),
+    ('33333333-0003-0003-0003-000000000004', '44444444-0004-0004-0004-000000000002')
+ON CONFLICT DO NOTHING;
+
+-- ============================================================================
+-- 26. RECIPE ALLERGENS AND ALTERNATIVES
+-- ============================================================================
+INSERT INTO recipe_allergens (recipe_id, allergen_id, contains) VALUES
+    ('77777777-0007-0007-0007-000000000001', (SELECT id FROM allergens WHERE code='GLU'), TRUE),
+    ('77777777-0007-0007-0007-000000000001', (SELECT id FROM allergens WHERE code='LAC'), TRUE),
+    ('77777777-0007-0007-0007-000000000002', (SELECT id FROM allergens WHERE code='PES'), TRUE),
+    ('77777777-0007-0007-0007-000000000003', (SELECT id FROM allergens WHERE code='GLU'), FALSE)
+ON CONFLICT DO NOTHING;
+
+INSERT INTO recipe_alternatives (recipe_id, alternative_recipe_id, reason) VALUES
+    ('77777777-0007-0007-0007-000000000001', '77777777-0007-0007-0007-000000000002', 'Lasaña tiene gluten, el salmón no.')
+ON CONFLICT DO NOTHING;

@@ -26,8 +26,10 @@
  * DATOS SIMULADOS (Mock): En la siguiente fase se conectarán a la base de datos real.
  */
 
+import { useState, useEffect } from 'react'
 import StatCard from '../components/StatCard'
 import Panel from '../components/Panel'
+import { getAllergenAlerts, getAllergensFrequency, getAllergensHeatmap, getAllergensPresence, getAllergensAlertsRecent, getAllergensAlternatives } from '../api'
 import './AllergensPage.css'
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -106,7 +108,7 @@ const alternatives = [
 ]
 
 /* Historial de alertas recientes con más detalle */
-const recentAlerts = [
+const recentAlertsMock = [
   { id: 1, time: '14:23', date: 'Hoy',       comensal: 'María G.',   allergen: 'Gluten',        dish: 'Pan de Hogaza',     table: 'Mesa 7',  severity: 'alta',  resolved: false, waiter: 'Carlos M.' },
   { id: 2, time: '13:45', date: 'Hoy',       comensal: 'Carlos P.',  allergen: 'Lactosa',       dish: 'Salsa Bechamel',    table: 'Mesa 3',  severity: 'media', resolved: true,  waiter: 'Ana L.' },
   { id: 3, time: '12:10', date: 'Hoy',       comensal: 'Ana R.',     allergen: 'Frutos Secos',  dish: 'Tarta de Almendras',table: 'Mesa 12', severity: 'alta',  resolved: true,  waiter: 'Pedro S.' },
@@ -115,8 +117,98 @@ const recentAlerts = [
   { id: 6, time: '14:50', date: '07/05',     comensal: 'Jordi B.',   allergen: 'Sulfitos',      dish: 'Vino Tinto Reserva',table: 'Mesa 2',  severity: 'baja',  resolved: true,  waiter: 'Pedro S.' },
 ]
 
+function AllergensPage({ establishmentId, date }) {
+  const [activeAlertsCount, setActiveAlertsCount] = useState("0")
+  const [trendLabel, setTrendLabel] = useState("vs. semana pasada")
+  const [recentAlerts, setRecentAlerts] = useState(recentAlertsMock)
+  const [eu14AllergensData, setEu14AllergensData] = useState(eu14Allergens)
+  const [heatmapDataList, setHeatmapDataList] = useState(heatmapData)
+  const [presenceDistributionData, setPresenceDistributionData] = useState(presenceDistribution)
+  const [alternativesData, setAlternativesData] = useState(alternatives)
+  
+  // KPIs
+  const [resolutionRate, setResolutionRate] = useState("0%")
+  const [comensalsWithAllergies, setComensalsWithAllergies] = useState("0")
 
-function AllergensPage() {
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const alerts = await getAllergenAlerts(establishmentId, date)
+        if (alerts && alerts.length > 0) {
+          const active = alerts.filter(a => a.is_resolved === false).length
+          const resolved = alerts.filter(a => a.is_resolved === true).length
+          setActiveAlertsCount(active.toString())
+          setTrendLabel("Alertas reales BD")
+          setResolutionRate(`${Math.round((resolved / alerts.length) * 100)}%`)
+        }
+
+        const freq = await getAllergensFrequency(establishmentId, date)
+        if (freq && freq.length > 0) {
+          const totalComensals = freq.reduce((sum, f) => sum + Number(f.comensals_count), 0)
+          setComensalsWithAllergies(totalComensals.toString())
+          setEu14AllergensData(freq.map(f => {
+            const count = Number(f.comensals_count)
+            const baseAllergen = eu14Allergens.find(a => a.euNumber === Number(f.eu_number))
+            return {
+              euNumber: Number(f.eu_number),
+              code: f.code,
+              nameEs: f.name_es,
+              icon: baseAllergen?.icon || '⚠️',
+              comensals: count,
+              pct: totalComensals > 0 ? Math.round((count / totalComensals) * 100) : 0,
+              severity: baseAllergen?.severity || 'medium'
+            }
+          }))
+        }
+        
+        const heatmap = await getAllergensHeatmap() // static
+        if (heatmap && heatmap.length > 0) {
+          setHeatmapDataList(heatmap.map(h => ({
+            dish: h.dish_name,
+            allergens: h.allergens
+          })))
+        }
+
+        const presence = await getAllergensPresence() // static
+        if (presence && presence.length > 0) {
+          setPresenceDistributionData(presence.map((p, i) => ({
+            label: p.label,
+            value: Number(p.value),
+            color: i === 0 ? 'var(--accent-danger)' : i === 1 ? 'var(--accent-warning)' : 'var(--accent-info)'
+          })))
+        }
+
+        const recent = await getAllergensAlertsRecent(establishmentId, date)
+        if (recent && recent.length > 0) {
+          setRecentAlerts(recent.map(r => ({
+            id: r.id,
+            time: r.time,
+            date: r.date,
+            comensal: r.comensal || 'Comensal Anónimo',
+            allergen: r.allergen,
+            dish: r.dish,
+            table: r.table || 'Mesa ?',
+            severity: r.severity === 'high' ? 'alta' : r.severity === 'low' ? 'baja' : 'media',
+            resolved: r.resolved,
+            waiter: r.waiter || '-'
+          })))
+        }
+
+        const alts = await getAllergensAlternatives() // static
+        if (alts && alts.length > 0) {
+          setAlternativesData(alts.map(a => ({
+            original: a.original,
+            originalAllergens: a.original_allergens || [],
+            replacement: a.replacement,
+            reason: a.reason || 'Sugerencia automática de cocina'
+          })))
+        }
+      } catch (err) {
+        console.error("Error fetching allergen data", err)
+      }
+    }
+    loadData()
+  }, [establishmentId, date])
   /* Códigos abreviados para las cabeceras del heatmap */
   const allergenCodes = ['GLU', 'CRU', 'HUE', 'PES', 'CAC', 'SOJ', 'LAC', 'FSC', 'API', 'MOS', 'SES', 'SUL', 'ALT', 'MOL']
   const allergenKeys = ['gluten', 'crustaceans', 'eggs', 'fish', 'peanuts', 'soy', 'milk', 'nuts', 'celery', 'mustard', 'sesame', 'sulphites', 'lupin', 'molluscs']
@@ -147,19 +239,19 @@ function AllergensPage() {
         <StatCard
           icon="🚨"
           label="Alertas Activas"
-          value="1"
+          value={activeAlertsCount}
           trend="down"
           trendValue="-80%"
-          trendLabel="vs. semana pasada"
+          trendLabel={trendLabel}
           accentColor="#f87171"
         />
         <StatCard
           icon="🛡️"
           label="Comensales con Alergias Registradas"
-          value="89"
-          trend="up"
-          trendValue="+23"
-          trendLabel="este mes"
+          value={comensalsWithAllergies}
+          trend="neutral"
+          trendValue="Tiempo real"
+          trendLabel={trendLabel}
           accentColor="#818cf8"
         />
         <StatCard
@@ -173,10 +265,10 @@ function AllergensPage() {
         <StatCard
           icon="⚡"
           label="Tasa de Resolución"
-          value="97.2%"
-          trend="up"
-          trendValue="+2.1%"
-          trendLabel="vs. mes anterior"
+          value={resolutionRate}
+          trend="neutral"
+          trendValue="Tiempo real"
+          trendLabel={trendLabel}
           accentColor="#fbbf24"
         />
       </div>
@@ -196,7 +288,7 @@ function AllergensPage() {
         subtitle="Basado en perfiles de comensales registrados — Reglamento (UE) 1169/2011"
       >
         <div className="allergen-grid">
-          {eu14Allergens.map((a, i) => (
+          {eu14AllergensData.map((a, i) => (
             <div
               key={a.code}
               className={`allergen-item severity-${a.severity}`}
@@ -244,13 +336,13 @@ function AllergensPage() {
                 </tr>
               </thead>
               <tbody>
-                {heatmapData.map((row) => (
+                {heatmapDataList.map((row) => (
                   <tr key={row.dish}>
                     <td>{row.dish}</td>
-                    {allergenKeys.map((key, i) => {
-                      const value = row.allergens[key]
+                    {allergenCodes.map((code, i) => {
+                      const value = row.allergens ? row.allergens[code] : undefined;
                       return (
-                        <td key={key}>
+                        <td key={code}>
                           <span
                             className={`heatmap-cell ${getCellClass(value || '')}`}
                             title={getCellTitle(value, row.dish, eu14Allergens[i].nameEs)}
@@ -288,7 +380,7 @@ function AllergensPage() {
           subtitle="En los ingredientes de la carta"
         >
           <div className="presence-distribution">
-            {presenceDistribution.map((item) => (
+            {presenceDistributionData.map((item) => (
               <div key={item.label} className="presence-row">
                 <span className="presence-label">{item.label}</span>
                 <div className="presence-bar-track">
@@ -336,7 +428,7 @@ function AllergensPage() {
           subtitle="Recomendaciones automáticas para platos con alérgenos"
         >
           <div className="alternatives-list">
-            {alternatives.map((alt, i) => (
+            {alternativesData.map((alt, i) => (
               <div key={i} className="alternative-card">
                 <div className="alternative-original">
                   <div className="alternative-original-name">{alt.original}</div>

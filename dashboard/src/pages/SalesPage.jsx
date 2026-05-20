@@ -28,8 +28,10 @@
  * `menu_card_items` (precio), `recipes` (categoría), `establishments`
  */
 
+import { useState, useEffect } from 'react'
 import StatCard from '../components/StatCard'
 import Panel from '../components/Panel'
+import { getOrders, getSalesWeeklyRevenue, getSalesByEstablishment, getSalesByCategory, getSalesTopDishes } from '../api'
 import './SalesPage.css'
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -53,7 +55,7 @@ const weeklyRevenue = [
 ]
 
 /* Ingresos por establecimiento */
-const establishments = [
+const establishmentsMock = [
   {
     name: 'CalBlay Centro',
     address: 'Carrer Major, 12 — Barcelona',
@@ -111,9 +113,90 @@ const ticketDistribution = [
 ]
 
 
-function SalesPage() {
+function SalesPage({ establishmentId, date }) {
+  const [completedOrdersCount, setCompletedOrdersCount] = useState("134")
+  const [completedOrdersTrend, setCompletedOrdersTrend] = useState("vs. domingo pasado")
+  
+  const [weeklyRevenueData, setWeeklyRevenueData] = useState(weeklyRevenue)
+  const [establishmentsData, setEstablishmentsData] = useState(establishmentsMock)
+  const [categoryBreakdownData, setCategoryBreakdownData] = useState(categoryBreakdown)
+  const [topByRevenueData, setTopByRevenueData] = useState(topByRevenue)
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const realOrders = await getOrders(establishmentId, date)
+        if (realOrders && realOrders.length > 0) {
+          const completed = realOrders.filter(o => o.status === 'served' || true).length;
+          setCompletedOrdersCount(completed.toString())
+          setCompletedOrdersTrend("Datos reales BD")
+        } else {
+          setCompletedOrdersCount("0")
+          setCompletedOrdersTrend("Sin datos")
+        }
+
+        const rev = await getSalesWeeklyRevenue(establishmentId, date)
+        if (rev && rev.length > 0) {
+          setWeeklyRevenueData(rev.map(r => ({
+            day: new Date(r.order_date).toLocaleDateString('es-ES', {weekday: 'short'}).substring(0, 3),
+            revenue: Number(r.revenue),
+            orders: Number(r.total_orders)
+          })))
+        } else {
+          setWeeklyRevenueData([])
+        }
+
+        const est = await getSalesByEstablishment('all', date)
+        if (est && est.length > 0) {
+          setEstablishmentsData(est.map((e, i) => ({
+            name: e.establishment_name,
+            address: e.address,
+            revenue: Number(e.revenue),
+            orders: Number(e.total_orders),
+            color: establishmentsMock[i % establishmentsMock.length]?.color || '#818cf8',
+            icon: e.establishment_name.toLowerCase().includes('port') ? '⛵' : (e.establishment_name.toLowerCase().includes('centro') ? '🏙️' : '🌳')
+          })))
+        } else {
+          setEstablishmentsData([])
+        }
+
+        const cat = await getSalesByCategory(establishmentId, date)
+        if (cat && cat.length > 0) {
+          const total = cat.reduce((sum, c) => sum + Number(c.revenue), 0)
+          setCategoryBreakdownData(cat.map((c, i) => ({
+            label: c.category_name,
+            amount: Number(c.revenue),
+            pct: total > 0 ? Math.round((Number(c.revenue) / total) * 100) : 0,
+            icon: categoryBreakdown[i % categoryBreakdown.length]?.icon || '🍽️',
+            color: categoryBreakdown[i % categoryBreakdown.length]?.color || '#818cf8'
+          })))
+        } else {
+          setCategoryBreakdownData([])
+        }
+
+        const top = await getSalesTopDishes(establishmentId, date)
+        if (top && top.length > 0) {
+          setTopByRevenueData(top.map((t, i) => ({
+            rank: i + 1,
+            name: t.dish_name,
+            price: Number(t.price),
+            qty: Number(t.qty_sold),
+            revenue: Number(t.revenue),
+            category: t.category_name
+          })))
+        } else {
+          setTopByRevenueData([])
+        }
+
+      } catch (error) {
+        console.error("Error fetching sales data:", error)
+      }
+    }
+    loadData()
+  }, [establishmentId, date])
+
   /* Calcular el valor máximo de ingresos de la semana para escalar las barras */
-  const maxRevenue = Math.max(...weeklyRevenue.map(d => d.revenue))
+  const maxRevenue = Math.max(...weeklyRevenueData.map(d => d.revenue))
 
   /* Función para la clase de medalla del ranking */
   const rankClass = (rank) => {
@@ -136,10 +219,10 @@ function SalesPage() {
         <StatCard
           icon="💰"
           label="Ingresos Hoy"
-          value="4.230€"
-          trend="up"
-          trendValue="+8.3%"
-          trendLabel="vs. ayer"
+          value={weeklyRevenueData.length > 0 ? `${weeklyRevenueData[weeklyRevenueData.length - 1].revenue.toLocaleString('es-ES')}€` : '0€'}
+          trend="neutral"
+          trendValue="Datos BD"
+          trendLabel=""
           accentColor="#34d399"
         />
         <StatCard
@@ -154,10 +237,10 @@ function SalesPage() {
         <StatCard
           icon="🍽️"
           label="Pedidos Completados"
-          value="134"
+          value={completedOrdersCount}
           trend="up"
           trendValue="+15"
-          trendLabel="vs. domingo pasado"
+          trendLabel={completedOrdersTrend}
           accentColor="#60a5fa"
         />
         <StatCard
@@ -203,13 +286,13 @@ function SalesPage() {
           subtitle="Últimos 7 días — Total: 28.910€"
         >
           <div className="revenue-chart">
-            {weeklyRevenue.map((day, i) => (
+            {weeklyRevenueData.map((day, i) => (
               <div key={day.day} className="revenue-bar-wrapper">
                 <span className="revenue-bar-value">
                   {(day.revenue / 1000).toFixed(1)}k
                 </span>
                 <div
-                  className={`revenue-bar ${i === weeklyRevenue.length - 1 ? 'today' : ''}`}
+                  className={`revenue-bar ${i === weeklyRevenueData.length - 1 ? 'today' : ''}`}
                   style={{ height: `${(day.revenue / maxRevenue) * 100}%` }}
                   title={`${day.day}: ${day.revenue.toLocaleString('es-ES')}€ · ${day.orders} pedidos`}
                 />
@@ -236,7 +319,7 @@ function SalesPage() {
           subtitle="Semana actual"
         >
           <div className="establishment-list">
-            {establishments.map((est) => (
+            {establishmentsData.map((est) => (
               <div key={est.name} className="establishment-row">
                 <div
                   className="establishment-icon"
@@ -281,7 +364,7 @@ function SalesPage() {
           subtitle="Distribución de la facturación"
         >
           <div className="category-breakdown">
-            {categoryBreakdown.map((cat) => (
+            {categoryBreakdownData.map((cat) => (
               <div key={cat.label} className="category-row">
                 <span className="category-icon">{cat.icon}</span>
                 <span className="category-label">{cat.label}</span>
@@ -306,7 +389,7 @@ function SalesPage() {
           icon="🏆"
           subtitle="Precio × Unidades vendidas"
         >
-          {topByRevenue.map((dish) => (
+          {topByRevenueData.map((dish) => (
             <div key={dish.rank} className="revenue-dish-item">
               <div
                 className={`revenue-dish-rank panel-list-item-rank ${rankClass(dish.rank)}`}

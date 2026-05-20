@@ -334,6 +334,32 @@ Una tabla clasificada que incentiva y mide el esfuerzo de ventas. Evalúa a los 
 
 ---
 
+## Fase 8: Conexión con la Base de Datos (API)
+**Fecha:** 18 de mayo de 2026
+
+### ¿Por qué esta fase es importante?
+Hasta ahora, el dashboard mostraba datos simulados (Mock Data). Para que sea útil, debe conectarse a los datos reales de PostgreSQL. Sin embargo, por seguridad **nunca** se debe conectar React directamente a la base de datos, ya que expondría las contraseñas. Necesitamos una "capa intermedia" o API.
+
+### Decisión de Arquitectura: PostgREST
+Decidimos usar **PostgREST** en lugar de programar un backend manual (en Node.js o Python).
+- **Aislamiento:** Corre en su propio contenedor Docker, lo que evita conflictos de dependencias o lenguajes con otras plataformas del equipo.
+- **Automático:** Genera instantáneamente una API RESTful basada en las tablas y esquemas de nuestra base de datos.
+- **Seguridad:** Utiliza los roles de PostgreSQL para definir qué puede o no puede verse.
+
+### Paso 8.1 — Configuración de PostgREST y Roles
+1. Se añadió el servicio `postgrest` al archivo `docker-compose.dev.yml` para que corra junto a PostgreSQL en el puerto `3000`.
+2. Se crearon migraciones SQL (`000014_create_postgrest_roles`) para generar un rol de base de datos llamado `web_anon`. Este rol tiene permisos estrictamente de **lectura** (`SELECT`) sobre el esquema `public`, protegiendo la base de datos de modificaciones no autorizadas por parte del frontend.
+
+### Paso 8.2 — Configuración del Frontend (CORS)
+- **Problema de CORS:** El navegador bloquea peticiones de `localhost:5173` (Vite) a `localhost:3000` (PostgREST) por seguridad.
+- **Solución:** Se configuró un proxy en `dashboard/vite.config.js`. Ahora, cuando React hace una petición a `/api`, Vite la redirige internamente a PostgREST evitando bloqueos del navegador.
+
+### Paso 8.3 — Fetching de Datos Reales en React
+- Se creó el archivo `src/api.js`, que actúa como un servicio centralizado para hacer las peticiones `fetch` al endpoint `/api/`. Este servicio maneja errores para evitar que la UI se rompa si la base de datos está vacía o apagada.
+- En la página `OverviewPage.jsx`, implementamos el hook `useEffect` y `useState` para obtener el número de "Pedidos Hoy" directamente de la tabla `orders`. Esto sirve como **Prueba de Concepto (PoC)**, reemplazando el valor simulado por el valor real.
+
+---
+
 ## Glosario de Términos
 
 | Término | Explicación sencilla |

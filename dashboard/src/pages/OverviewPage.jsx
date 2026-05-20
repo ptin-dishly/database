@@ -14,8 +14,19 @@
  * En la siguiente fase, estos datos se conectarán a la base de datos real.
  */
 
+import { useState, useEffect } from 'react'
 import StatCard from '../components/StatCard'
 import Panel from '../components/Panel'
+import { 
+  getOrders, 
+  getSalesWeeklyRevenue, 
+  getTablesStatus, 
+  getAllergenAlerts, 
+  getOrderStageTimes, 
+  getSalesTopDishes, 
+  getAllergensAlertsRecent, 
+  getOrdersHourly 
+} from '../api'
 import './OverviewPage.css'
 
 /* ── Datos simulados (Mock Data) ──
@@ -95,9 +106,145 @@ const allergenAlerts = [
 
 const hourlyActivity = [35, 28, 42, 55, 70, 85, 92, 88, 95, 78, 65, 48, 30, 22, 18]
 
-function OverviewPage() {
+function OverviewPage({ establishmentId, date }) {
+  const [stats, setStats] = useState(mockStats)
+  const [isLoading, setIsLoading] = useState(true)
+  const [topDishesData, setTopDishesData] = useState(topDishes)
+  const [occupancyData, setOccupancyData] = useState({ pct: 82, occupied: 41, free: 9, total: 50 })
+  const [recentAlertsData, setRecentAlertsData] = useState(allergenAlerts)
+  const [hourlyActivityData, setHourlyActivityData] = useState(hourlyActivity)
+
+  useEffect(() => {
+    async function loadData() {
+      setIsLoading(true)
+      try {
+        const realOrders = await getOrders(establishmentId, date)
+        const salesRevenue = await getSalesWeeklyRevenue(establishmentId, date)
+        const tablesStatus = await getTablesStatus(establishmentId, date)
+        const alerts = await getAllergenAlerts(establishmentId, date)
+        const stageTimes = await getOrderStageTimes(establishmentId, date)
+        const topDishesReq = await getSalesTopDishes(establishmentId, date)
+        const recentAlertsReq = await getAllergensAlertsRecent(establishmentId, date)
+        const hourlyActivityReq = await getOrdersHourly(establishmentId, date)
+        
+        let newStats = [...mockStats]
+        
+        // 1. Pedidos Hoy
+        if (realOrders && realOrders.length > 0) {
+          const todaysOrders = realOrders.filter(o => new Date(o.created_at).toDateString() === new Date().toDateString())
+          newStats[0] = { ...newStats[0], value: todaysOrders.length.toString(), trendLabel: 'Datos BD' }
+        } else {
+          newStats[0] = { ...newStats[0], value: '0', trendLabel: 'Sin datos' }
+        }
+        
+        // 2. Ingresos del Día
+        if (salesRevenue && salesRevenue.length > 0) {
+          const todayRev = salesRevenue.find(s => new Date(s.order_date).toDateString() === new Date().toDateString())
+          if (todayRev) {
+            newStats[1] = { ...newStats[1], value: `${Number(todayRev.revenue).toLocaleString('es-ES', { minimumFractionDigits: 0 })}€`, trendLabel: 'Datos BD' }
+          } else {
+            newStats[1] = { ...newStats[1], value: '0€', trendLabel: 'Sin datos' }
+          }
+        } else {
+          newStats[1] = { ...newStats[1], value: '0€', trendLabel: 'Sin datos' }
+        }
+        
+        // 3. Ocupación Actual & Anillo
+        if (tablesStatus && tablesStatus.length > 0) {
+          const occupied = tablesStatus.filter(t => t.status === 'occupied').length
+          const total = tablesStatus.length
+          const pct = total > 0 ? Math.round((occupied / total) * 100) : 0
+          
+          newStats[2] = { ...newStats[2], value: `${pct}%`, trendLabel: 'Datos BD' }
+          
+          setOccupancyData({ pct, occupied, free: total - occupied, total })
+          
+          // 6. Comensales Hoy (usamos current diners como comensales en vivo)
+          let currentDiners = 0;
+          tablesStatus.forEach(t => { if(t.diners) currentDiners += Number(t.diners) })
+          newStats[5] = { ...newStats[5], value: currentDiners.toString(), trendLabel: 'Sentados ahora' }
+        } else {
+          newStats[2] = { ...newStats[2], value: '0%', trendLabel: 'Sin datos' }
+          setOccupancyData({ pct: 0, occupied: 0, free: 0, total: 0 })
+          newStats[5] = { ...newStats[5], value: '0', trendLabel: 'Sin datos' }
+        }
+        
+        // 4. Alertas Alérgenos
+        if (alerts && alerts.length > 0) {
+          const active = alerts.filter(a => !a.is_resolved).length
+          newStats[3] = { ...newStats[3], value: active.toString(), trendLabel: 'Activas' }
+        } else {
+          newStats[3] = { ...newStats[3], value: '0', trendLabel: 'Sin alertas' }
+        }
+        
+        // 5. Tiempo Medio Servicio
+        if (stageTimes && stageTimes.length > 0) {
+          const served = stageTimes.find(s => s.status === 'served')
+          if (served) {
+            newStats[4] = { ...newStats[4], value: `${served.avg_minutes} min`, trendLabel: 'Desde comanda' }
+          } else {
+            newStats[4] = { ...newStats[4], value: '-', trendLabel: 'Sin datos' }
+          }
+        } else {
+          newStats[4] = { ...newStats[4], value: '-', trendLabel: 'Sin datos' }
+        }
+        
+        setStats(newStats)
+        
+        // Top Platos
+        if (topDishesReq && topDishesReq.length > 0) {
+          const maxOrders = Math.max(...topDishesReq.map(d => Number(d.qty_sold))) || 1
+          setTopDishesData(topDishesReq.slice(0, 5).map((d, i) => ({
+            rank: i + 1,
+            name: d.dish_name,
+            category: d.category_name,
+            orders: Number(d.qty_sold),
+            pct: Math.round((Number(d.qty_sold) / maxOrders) * 100)
+          })))
+        } else {
+          setTopDishesData([])
+        }
+        
+        // Alertas Recientes
+        if (recentAlertsReq && recentAlertsReq.length > 0) {
+          setRecentAlertsData(recentAlertsReq.slice(0, 5).map(a => ({
+            time: a.time,
+            comensal: a.comensal || 'Anónimo',
+            allergen: a.allergen,
+            dish: a.dish,
+            severity: a.severity === 'high' ? 'alta' : 'media',
+            resolved: a.resolved
+          })))
+        } else {
+          setRecentAlertsData([])
+        }
+        
+        // Actividad por horas
+        if (hourlyActivityReq && hourlyActivityReq.length > 0) {
+          const hoursMap = Array(15).fill(0) // From 8:00 to 22:00 = 15 slots
+          hourlyActivityReq.forEach(h => {
+            const hr = Number(h.hour_of_day)
+            if (hr >= 8 && hr <= 22) {
+              hoursMap[hr - 8] = Number(h.total_orders)
+            }
+          })
+          const maxVal = Math.max(...hoursMap) || 1
+          setHourlyActivityData(hoursMap.map(val => Math.round((val / maxVal) * 100)))
+        } else {
+          setHourlyActivityData(Array(15).fill(0))
+        }
+      } catch (error) {
+        console.error("No se pudo conectar a la API", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadData()
+  }, [establishmentId, date])
+
   /* Datos para el anillo de ocupación */
-  const occupancyPct = 82
+  const occupancyPct = occupancyData.pct
   /* 408 es la circunferencia del círculo SVG (2 * π * radio 65) */
   const strokeOffset = 408 - (408 * occupancyPct) / 100
 
@@ -115,7 +262,7 @@ function OverviewPage() {
           SECCIÓN 1: Tarjetas KPI (números grandes arriba)
           ═══════════════════════════════════════════════════════════════ */}
       <div className="stats-grid">
-        {mockStats.map((stat, i) => (
+        {stats.map((stat, i) => (
           <StatCard key={i} {...stat} />
         ))}
       </div>
@@ -126,7 +273,7 @@ function OverviewPage() {
       <div className="panels-row-3">
         {/* Panel izquierdo: Top 5 platos */}
         <Panel title="Top 5 Platos Más Pedidos" icon="🏆" subtitle="Hoy">
-          {topDishes.map((dish) => (
+          {topDishesData.map((dish) => (
             <div key={dish.rank} className="panel-list-item">
               <div className="panel-list-item-left">
                 <div className={`panel-list-item-rank ${rankClass(dish.rank)}`}>
@@ -167,15 +314,15 @@ function OverviewPage() {
             </div>
             <div className="occupancy-details">
               <div className="occupancy-detail">
-                <div className="occupancy-detail-value">41</div>
+                <div className="occupancy-detail-value">{occupancyData.occupied}</div>
                 <div className="occupancy-detail-label">Mesas ocupadas</div>
               </div>
               <div className="occupancy-detail">
-                <div className="occupancy-detail-value">9</div>
+                <div className="occupancy-detail-value">{occupancyData.free}</div>
                 <div className="occupancy-detail-label">Mesas libres</div>
               </div>
               <div className="occupancy-detail">
-                <div className="occupancy-detail-value">50</div>
+                <div className="occupancy-detail-value">{occupancyData.total}</div>
                 <div className="occupancy-detail-label">Total</div>
               </div>
             </div>
@@ -200,7 +347,7 @@ function OverviewPage() {
               </tr>
             </thead>
             <tbody>
-              {allergenAlerts.map((alert, i) => (
+              {recentAlertsData.map((alert, i) => (
                 <tr key={i}>
                   <td style={{ fontVariantNumeric: 'tabular-nums' }}>{alert.time}</td>
                   <td>{alert.comensal}</td>
@@ -224,12 +371,12 @@ function OverviewPage() {
         {/* Panel derecho: Actividad por horas */}
         <Panel title="Actividad del Día" icon="📈" subtitle="Pedidos por hora">
           <div className="activity-bars">
-            {hourlyActivity.map((value, i) => (
+            {hourlyActivityData.map((value, i) => (
               <div
                 key={i}
                 className="activity-bar"
                 style={{ height: `${value}%` }}
-                title={`${8 + i}:00 — ${value} pedidos`}
+                title={`${8 + i}:00`}
               />
             ))}
           </div>

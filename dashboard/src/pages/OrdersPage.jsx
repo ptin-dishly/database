@@ -27,8 +27,10 @@
  * DATOS SIMULADOS (Mock): Se conectarán a `orders`, `order_items`, `rooms`, `tables`
  */
 
+import { useState, useEffect } from 'react'
 import StatCard from '../components/StatCard'
 import Panel from '../components/Panel'
+import { getOrders, getOrdersHourly, getOrdersRoomPerformance, getOrderStageTimes } from '../api'
 import './OrdersPage.css'
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -40,7 +42,7 @@ import './OrdersPage.css'
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* Pipeline: cuántos pedidos hay en cada estado ahora mismo */
-const pipeline = [
+const pipelineMock = [
   { status: 'pending',   label: 'Pendientes',  count: 8,  color: '#fbbf24' },
   { status: 'confirmed', label: 'Confirmados', count: 12, color: '#60a5fa' },
   { status: 'preparing', label: 'Preparando',  count: 15, color: '#818cf8' },
@@ -98,7 +100,91 @@ const roomPerformance = [
 ]
 
 
-function OrdersPage() {
+function OrdersPage({ establishmentId, date }) {
+  const [totalOrders, setTotalOrders] = useState("138")
+  const [completedOrders, setCompletedOrders] = useState("98")
+  const [cancelledOrders, setCancelledOrders] = useState("5")
+  const [trendLabel, setTrendLabel] = useState("vs. ayer")
+
+  const [hourlyOrdersData, setHourlyOrdersData] = useState(hourlyOrders)
+  const [roomPerformanceData, setRoomPerformanceData] = useState(roomPerformance)
+  const [avgTimesData, setAvgTimesData] = useState(avgTimes)
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const realOrders = await getOrders(establishmentId, date)
+        if (realOrders && realOrders.length > 0) {
+          setTotalOrders(realOrders.length.toString())
+          const completed = realOrders.filter(o => o.status === 'served').length
+          const cancelled = realOrders.filter(o => o.status === 'cancelled').length
+          
+          setCompletedOrders(completed.toString())
+          setCancelledOrders(cancelled.toString())
+          setTrendLabel("Datos reales BD")
+        } else {
+          setTotalOrders("0")
+          setCompletedOrders("0")
+          setCancelledOrders("0")
+          setTrendLabel("Sin datos")
+        }
+
+        const hourly = await getOrdersHourly(establishmentId, date)
+        if (hourly && hourly.length > 0) {
+          setHourlyOrdersData(hourly.map(h => ({
+            hour: h.hour_of_day.toString(),
+            total: Number(h.total_orders),
+            served: Number(h.served_orders),
+            active: Number(h.active_orders)
+          })))
+        } else {
+          setHourlyOrdersData([])
+        }
+
+        const roomPerf = await getOrdersRoomPerformance(establishmentId, date)
+        if (roomPerf && roomPerf.length > 0) {
+          setRoomPerformanceData(roomPerf.map((r, i) => ({
+            name: r.room_name,
+            floor: `Planta ${r.floor || 0}`,
+            icon: roomPerformance[i % roomPerformance.length]?.icon || '🏠',
+            color: roomPerformance[i % roomPerformance.length]?.color || '#818cf8',
+            orders: Number(r.total_orders),
+            avgTime: '15 min',
+            tables: Number(r.total_tables)
+          })))
+        } else {
+          setRoomPerformanceData([])
+        }
+
+        const stageTimes = await getOrderStageTimes(establishmentId, date)
+        if (stageTimes && stageTimes.length > 0) {
+          // Find minutes for each stage we care about
+          const getMins = (status) => {
+            const found = stageTimes.find(s => s.status === status)
+            return found ? `${found.avg_minutes} min` : '-'
+          }
+          
+          setAvgTimesData([
+            { label: 'Recibido',   time: getMins('pending'),  color: '#fbbf24' },
+            { label: 'Confirmado', time: getMins('confirmed'),  color: '#60a5fa' },
+            { label: 'En cocina',  time: getMins('preparing'), color: '#818cf8' },
+            { label: 'Servido',    time: getMins('served'), color: '#34d399' },
+          ])
+        } else {
+          setAvgTimesData([
+            { label: 'Recibido',   time: '-', color: '#fbbf24' },
+            { label: 'Confirmado', time: '-', color: '#60a5fa' },
+            { label: 'En cocina',  time: '-', color: '#818cf8' },
+            { label: 'Servido',    time: '-', color: '#34d399' },
+          ])
+        }
+      } catch (err) {
+        console.error("Error loading orders page data", err)
+      }
+    }
+    loadData()
+  }, [establishmentId, date])
+
   /* Mapa de colores y etiquetas para los badges de estado */
   const statusConfig = {
     pending:   { label: 'Pendiente',  class: 'badge-warning' },
@@ -109,7 +195,7 @@ function OrdersPage() {
   }
 
   /* Valor máximo para escalar las barras del gráfico horario */
-  const maxHourly = Math.max(...hourlyOrders.map(h => h.total))
+  const maxHourly = Math.max(...hourlyOrdersData.map(h => h.total), 1)
 
   return (
     <div className="orders-page">
@@ -122,10 +208,10 @@ function OrdersPage() {
         <StatCard
           icon="📋"
           label="Pedidos Hoy"
-          value="138"
+          value={totalOrders}
           trend="up"
           trendValue="+18"
-          trendLabel="vs. ayer"
+          trendLabel={trendLabel}
           accentColor="#818cf8"
         />
         <StatCard
@@ -139,19 +225,19 @@ function OrdersPage() {
         <StatCard
           icon="✅"
           label="Completados"
-          value="98"
+          value={completedOrders}
           trend="up"
           trendValue="+12"
-          trendLabel="vs. ayer a esta hora"
+          trendLabel={trendLabel}
           accentColor="#34d399"
         />
         <StatCard
           icon="❌"
           label="Cancelados"
-          value="5"
+          value={cancelledOrders}
           trend="down"
           trendValue="-3"
-          trendLabel="vs. ayer"
+          trendLabel={trendLabel}
           accentColor="#f87171"
         />
         <StatCard
@@ -185,7 +271,7 @@ function OrdersPage() {
         subtitle="Estado actual de todos los pedidos — en tiempo real"
       >
         <div className="pipeline-container">
-          {pipeline.map((stage, i) => (
+          {pipelineMock.map((stage, i) => (
             <>
               <div key={stage.status} className="pipeline-stage">
                 <div className="pipeline-stage-count" style={{ color: stage.color }}>
@@ -194,7 +280,7 @@ function OrdersPage() {
                 <div className="pipeline-stage-label">{stage.label}</div>
                 <div className="pipeline-stage-bar" style={{ background: stage.color }} />
               </div>
-              {i < pipeline.length - 1 && (
+              {i < pipelineMock.length - 1 && (
                 <div key={`arrow-${i}`} className="pipeline-arrow">→</div>
               )}
             </>
@@ -245,7 +331,7 @@ function OrdersPage() {
           subtitle="Servidos vs. en curso"
         >
           <div className="orders-hourly-chart">
-            {hourlyOrders.map((h) => (
+            {hourlyOrdersData.map((h) => (
               <div key={h.hour} className="orders-hourly-bar-wrapper">
                 <span className="orders-hourly-value">{h.total}</span>
                 <div style={{ display: 'flex', flexDirection: 'column', width: '100%', maxWidth: '28px', gap: '1px' }}>
@@ -293,10 +379,10 @@ function OrdersPage() {
               ⏱️ Tiempo medio por etapa
             </div>
             <div className="time-pipeline">
-              {avgTimes.map((step, i) => (
+              {avgTimesData.map((step, i) => (
                 <div key={step.label} className="time-pipeline-step">
                   <div className="time-pipeline-dot" style={{ background: step.color }} />
-                  {i < avgTimes.length - 1 && <div className="time-pipeline-connector" />}
+                  {i < avgTimesData.length - 1 && <div className="time-pipeline-connector" />}
                   <span className="time-pipeline-time">{step.time}</span>
                   <span className="time-pipeline-label">{step.label}</span>
                 </div>
@@ -344,7 +430,7 @@ function OrdersPage() {
           subtitle="Comparativa de carga de trabajo"
         >
           <div className="room-performance">
-            {roomPerformance.map((room) => (
+            {roomPerformanceData.map((room) => (
               <div key={room.name} className="room-row">
                 <div className="room-icon" style={{ background: `${room.color}15`, border: `1px solid ${room.color}30` }}>
                   {room.icon}

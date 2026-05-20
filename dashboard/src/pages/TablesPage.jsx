@@ -9,8 +9,10 @@
  * 3. Distribución por tamaño: qué tipo de mesas están más demandadas.
  */
 
+import { useState, useEffect } from 'react'
 import StatCard from '../components/StatCard'
 import Panel from '../components/Panel'
+import { getTablesList, getTablesStatus, getTablesSizeDistribution } from '../api'
 import './TablesPage.css'
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -18,7 +20,7 @@ import './TablesPage.css'
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* Estado actual de las mesas */
-const tablesStatus = [
+const tablesStatusMock = [
   { id: 1, name: 'Mesa 1',  capacity: 2, status: 'occupied', diners: 2, timeElapsed: '45 min',  waiter: 'Ana G.' },
   { id: 2, name: 'Mesa 2',  capacity: 2, status: 'free',     diners: 0, timeElapsed: '-',       waiter: '-' },
   { id: 3, name: 'Mesa 3',  capacity: 4, status: 'reserved', diners: 4, timeElapsed: '14:30',   waiter: '-' },
@@ -41,7 +43,99 @@ const tableSizeDistribution = [
   { size: '8+ pax', total: 4, occupied: 1,  pct: 25, color: '#f472b6' },
 ]
 
-function TablesPage() {
+function TablesPage({ establishmentId, date }) {
+  const [tablesStatusData, setTablesStatusData] = useState(tablesStatusMock)
+  const [tableSizeDistData, setTableSizeDistData] = useState(tableSizeDistribution)
+  const [freeTablesCount, setFreeTablesCount] = useState("0")
+  const [occupancyRate, setOccupancyRate] = useState("0%")
+  const [currentDiners, setCurrentDiners] = useState("0")
+  const [alerts, setAlerts] = useState([])
+  const [trendLabel, setTrendLabel] = useState("Datos reales BD")
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const status = await getTablesStatus(establishmentId, date)
+        if (status && status.length > 0) {
+          const freeTables = status.filter(t => t.status === 'free').length
+          setFreeTablesCount(freeTables.toString())
+          
+          let totalDiners = 0
+          const currentAlerts = []
+          
+          setTablesStatusData(status.map(t => {
+            const diners = Number(t.diners) || 0;
+            totalDiners += diners;
+            
+            let timeElapsedStr = '-';
+            if (t.occupied_since) {
+              const mins = Math.floor((new Date() - new Date(t.occupied_since)) / 60000);
+              const hrs = Math.floor(mins / 60);
+              const remMins = mins % 60;
+              timeElapsedStr = hrs > 0 ? `${hrs}h ${remMins}m` : `${mins} min`;
+              
+              if (mins > 105) { // more than 1h 45m
+                currentAlerts.push({
+                  type: 'warning',
+                  icon: '⚠️',
+                  text: `La Mesa ${t.table_number} lleva ocupada más de 1h 45m.`
+                })
+              }
+            }
+            
+            return {
+              id: t.table_id,
+              name: `Mesa ${t.table_number}`,
+              capacity: Number(t.capacity),
+              status: t.status,
+              diners: t.status === 'occupied' ? diners : 0,
+              timeElapsed: timeElapsedStr,
+              waiter: t.waiter_name || '-'
+            }
+          }))
+          
+          setCurrentDiners(totalDiners.toString())
+          setAlerts(currentAlerts)
+        } else {
+          setTablesStatusData([])
+          setFreeTablesCount("0")
+          setCurrentDiners("0")
+          setAlerts([])
+        }
+
+        const sizeDist = await getTablesSizeDistribution(establishmentId, date)
+        if (sizeDist && sizeDist.length > 0) {
+          let totTables = 0;
+          let occTables = 0;
+          
+          setTableSizeDistData(sizeDist.map((s, i) => {
+            const total = Number(s.total_tables)
+            const occupied = Number(s.occupied_tables)
+            totTables += total;
+            occTables += occupied;
+            return {
+              size: `${s.capacity} pax`,
+              total: total,
+              occupied: occupied,
+              pct: total > 0 ? Math.round((occupied / total) * 100) : 0,
+              color: tableSizeDistribution[i % tableSizeDistribution.length]?.color || '#60a5fa'
+            }
+          }))
+          
+          if (totTables > 0) {
+            setOccupancyRate(`${Math.round((occTables / totTables) * 100)}%`)
+          }
+        } else {
+          setTableSizeDistData([])
+          setOccupancyRate("0%")
+        }
+      } catch (err) {
+        console.error("Error fetching tables", err)
+      }
+    }
+    loadData()
+  }, [establishmentId, date])
+
   const getStatusColor = (status) => {
     switch (status) {
       case 'occupied': return '#ef4444' // Rojo
@@ -70,19 +164,19 @@ function TablesPage() {
         <StatCard
           icon="🪑"
           label="Ocupación Actual"
-          value="68%"
-          trend="up"
-          trendValue="+12%"
-          trendLabel="vs. ayer misma hora"
+          value={occupancyRate}
+          trend="neutral"
+          trendValue="Tiempo real"
+          trendLabel={trendLabel}
           accentColor="#3b82f6"
         />
         <StatCard
           icon="✅"
           label="Mesas Libres"
-          value="14"
+          value={freeTablesCount}
           trend="down"
           trendValue="-3"
-          trendLabel="en la última hora"
+          trendLabel={trendLabel}
           accentColor="#10b981"
         />
         <StatCard
@@ -97,10 +191,10 @@ function TablesPage() {
         <StatCard
           icon="👥"
           label="Comensales Actuales"
-          value="84"
-          trend="up"
-          trendValue="+15"
-          trendLabel="vs. media semanal"
+          value={currentDiners}
+          trend="neutral"
+          trendValue="Tiempo real"
+          trendLabel={trendLabel}
           accentColor="#8b5cf6"
         />
         <StatCard
@@ -134,7 +228,7 @@ function TablesPage() {
           subtitle="Vista general de la sala y terraza"
         >
           <div className="tables-grid-view">
-            {tablesStatus.map(table => (
+            {tablesStatusData.map(table => (
               <div key={table.id} className={`table-card status-${table.status}`}>
                 <div className="table-card-header">
                   <span className="table-name">{table.name}</span>
@@ -180,7 +274,7 @@ function TablesPage() {
             subtitle="Demanda de mesas por capacidad"
           >
             <div className="table-size-distribution">
-              {tableSizeDistribution.map(item => (
+              {tableSizeDistData.map(item => (
                 <div key={item.size} className="size-row">
                   <div className="size-label">{item.size}</div>
                   <div className="size-bar-track">
@@ -207,18 +301,17 @@ function TablesPage() {
             subtitle="Alertas automáticas del sistema"
           >
             <ul className="alerts-list">
-              <li className="alert-item warning">
-                <span className="alert-icon">⚠️</span>
-                <span>La <strong>Mesa 7</strong> lleva ocupada más de 1h 45m.</span>
-              </li>
-              <li className="alert-item info">
-                <span className="alert-icon">ℹ️</span>
-                <span>Llegada inminente: Reserva para 4 pax (Mesa 3) a las 14:30.</span>
-              </li>
-              <li className="alert-item success">
-                <span className="alert-icon">✅</span>
-                <span>Terraza 1 y 3 recién limpiadas y listas.</span>
-              </li>
+              {alerts.length > 0 ? alerts.map((a, i) => (
+                <li key={i} className={`alert-item ${a.type}`}>
+                  <span className="alert-icon">{a.icon}</span>
+                  <span>{a.text}</span>
+                </li>
+              )) : (
+                <li className="alert-item success">
+                  <span className="alert-icon">✅</span>
+                  <span>Todo en orden. Sin alertas activas.</span>
+                </li>
+              )}
             </ul>
           </Panel>
         </div>

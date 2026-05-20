@@ -15,7 +15,7 @@
  * (Más adelante se puede reemplazar por react-router para URLs reales)
  */
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
 import OverviewPage from './pages/OverviewPage'
@@ -24,19 +24,36 @@ import SalesPage from './pages/SalesPage'
 import OrdersPage from './pages/OrdersPage'
 import TablesPage from './pages/TablesPage'
 import StaffPage from './pages/StaffPage'
+import { getEstablishments } from './api'
 import './App.css'
 
-/* Lista de establecimientos de CalBlay.
-   En el futuro vendrá de la tabla `establishments` de la BD.
-   El valor 'all' representa la vista global de todos los restaurantes. */
-const establishments = [
-  { id: 'all',    name: 'Todos los Restaurantes', icon: '🏢' },
-  { id: 'centro', name: 'CalBlay Centro',         icon: '🏙️', address: 'Carrer Major, 12 — Barcelona' },
-  { id: 'port',   name: 'CalBlay Port Olímpic',   icon: '⛵', address: 'Passeig Marítim, 34 — Barcelona' },
-  { id: 'gracia', name: 'CalBlay Gràcia',         icon: '🌳', address: 'Plaça del Sol, 8 — Barcelona' },
-]
-
 function App() {
+  /* Estado que guarda los establecimientos obtenidos de la BD */
+  const [establishments, setEstablishments] = useState([
+    { id: 'all', name: 'Todos los Restaurantes', icon: '🏢' }
+  ])
+
+  /* Cargar establecimientos al iniciar */
+  useEffect(() => {
+    async function loadEstablishments() {
+      try {
+        const data = await getEstablishments()
+        if (data && data.length > 0) {
+          const formatted = data.map(est => ({
+            id: est.id,
+            name: est.name,
+            icon: est.name.toLowerCase().includes('port') ? '⛵' : (est.name.toLowerCase().includes('centro') ? '🏙️' : '🍴'),
+            address: est.address
+          }))
+          setEstablishments([{ id: 'all', name: 'Todos los Restaurantes', icon: '🏢' }, ...formatted])
+        }
+      } catch (error) {
+        console.error("Error cargando establecimientos", error)
+      }
+    }
+    loadEstablishments()
+  }, [])
+
   /* Estado que guarda qué página está activa.
      Por defecto arrancamos en 'overview' (Vista General) */
   const [activePage, setActivePage] = useState('overview')
@@ -56,17 +73,17 @@ function App() {
   const renderPage = () => {
     switch (activePage) {
       case 'overview':
-        return <OverviewPage />
+        return <OverviewPage establishmentId={selectedEstablishment} date={selectedDate} />
       case 'allergens':
-        return <AllergensPage />
+        return <AllergensPage establishmentId={selectedEstablishment} date={selectedDate} />
       case 'sales':
-        return <SalesPage />
+        return <SalesPage establishmentId={selectedEstablishment} date={selectedDate} />
       case 'orders':
-        return <OrdersPage />
+        return <OrdersPage establishmentId={selectedEstablishment} date={selectedDate} />
       case 'tables':
-        return <TablesPage />
+        return <TablesPage establishmentId={selectedEstablishment} date={selectedDate} />
       case 'staff':
-        return <StaffPage />
+        return <StaffPage establishmentId={selectedEstablishment} date={selectedDate} />
       /* Las demás páginas se irán añadiendo progresivamente */
       default:
         return (
