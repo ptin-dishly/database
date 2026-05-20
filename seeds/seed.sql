@@ -216,7 +216,7 @@ INSERT INTO recipes (id, establishment_id, name, description, category, portion_
     -- Més Peixos
     ('77777777-0007-0007-0007-000000000097', '22222222-0002-0002-0002-000000000001', 'Calamarcets a la planxa', 'Amb verdures i romesco', 'segundo_plato', 0.300, 1, 15, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9nLItZ4D0V9HSkZRcoZBXkfUkre1SpZ5Mbw&s'),
     ('77777777-0007-0007-0007-000000000098', '22222222-0002-0002-0002-000000000001', 'Llom de lluç a l''Orio', 'Amb patata confitada', 'segundo_plato', 0.300, 1, 20, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTneBIa6E8rR2VMrEeZayHSTPruCbkt9xawRw&s'),
-    ('77777777-0007-0007-0007-000000000099', '22222222-0002-0002-0002-000000000001', 'Bacallà amb samfaina', 'De verdures', 'segundo_plato', 0.350, 1, 20, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTo4cralRjCe_k-qC04NeAiZCT5jjLZFONQbg&s'),
+    ('77777777-0007-0007-0007-000000000099', '22222222-0002-0002-0002-000000000001', 'Bacallà amb samfaina', 'Amb verdures de temporada', 'segundo_plato', 0.350, 1, 20, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTo4cralRjCe_k-qC04NeAiZCT5jjLZFONQbg&s'),
 
     -- Cal Blay (Postres)
     ('77777777-0007-0007-0007-000000000073', '22222222-0002-0002-0002-000000000001', 'Pastís de formatge cremós', 'El nostre cheesecake', 'postre', 0.150, 1, 10, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6247QhL0eOYIlqvAVSFIopeLd8HJUVVg7bg&s'),
@@ -225,7 +225,7 @@ INSERT INTO recipes (id, establishment_id, name, description, category, portion_
     ('77777777-0007-0007-0007-000000000076', '22222222-0002-0002-0002-000000000001', 'Carpaccio de pinya', 'Amb gelat de coco', 'postre', 0.150, 1, 10, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhaYpa_iO8d3ZFja2b4Zf3cTrYumFgI8PT6Q&s'),
 
     -- Més Postres
-    ('77777777-0007-0007-0007-000000000100', '22222222-0002-0002-0002-000000000001', 'Pastís de xocolata 70%', 'Simón Coll', 'postre', 0.150, 1, 10, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7zGhNaY5vLk5OPVd-TSetbGo0ypx--f_kxw&s'),
+    ('77777777-0007-0007-0007-000000000100', '22222222-0002-0002-0002-000000000001', 'Pastís de xocolata 70%', 'De xocolata negra 70% Simón Coll', 'postre', 0.150, 1, 10, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7zGhNaY5vLk5OPVd-TSetbGo0ypx--f_kxw&s'),
     ('77777777-0007-0007-0007-000000000101', '22222222-0002-0002-0002-000000000001', 'Poma tatin', 'Amb crumble i gelat', 'postre', 0.150, 1, 15, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTccVHZ1G07iL744JUenb1u590OIiK_IaZ24w&s'),
     ('77777777-0007-0007-0007-000000000102', '22222222-0002-0002-0002-000000000001', 'Flam d''avellanes', 'Amb nata', 'postre', 0.150, 1, 10, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQlUp2NB9saUVTkqhzZGNwTS26BUyxBOU6eg&s'),
     ('77777777-0007-0007-0007-000000000103', '22222222-0002-0002-0002-000000000001', 'Gelats artesans', 'Sabors variats', 'postre', 0.150, 1, 5, 1, '99999999-9999-9999-9999-000000000001', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSP-LqU224LsONo6agXEC7QW_r-nZMwGA8GJQ&s'),
@@ -277,9 +277,8 @@ INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unit, is_opt
 
     -- 1. Pernil D.O ibèric Los Pedroches (0050)
     ('77777777-0007-0007-0007-000000000050', '11111111-0001-0001-0001-000000000024', 0.150, 'kg', FALSE), -- Carn de Porc
-    ('77777777-0007-0007-0007-000000000050', '11111111-0001-0001-0001-000000000001', 0.100, 'kg', FALSE), -- Farina i Pa
     ('77777777-0007-0007-0007-000000000050', '11111111-0001-0001-0001-000000000005', 0.050, 'kg', FALSE), -- Tomàquet
-    ('77777777-0007-0007-0007-000000000050', '11111111-0001-0001-0001-000000000008', 0.015, 'l', FALSE),  -- Oli d'oliva
+    ('77777777-0007-0007-0007-000000000050', '11111111-0001-0001-0001-000000000008', 0.015, 'l',  FALSE), -- Oli d'oliva
     ('77777777-0007-0007-0007-000000000050', '11111111-0001-0001-0001-000000000009', 0.005, 'kg', FALSE), -- Sal
 
     -- 2. Caneló de gall del Penedès (0060)
@@ -354,7 +353,7 @@ INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unit, is_opt
     ('77777777-0007-0007-0007-000000000084', '11111111-0001-0001-0001-000000000001', 0.200, 'kg', FALSE), -- Espaguetis -> Farina/Pasta
     ('77777777-0007-0007-0007-000000000085', '11111111-0001-0001-0001-000000000001', 0.200, 'kg', FALSE), -- Tortellini -> Farina/Pasta
     ('77777777-0007-0007-0007-000000000086', '11111111-0001-0001-0001-000000000021', 0.150, 'kg', FALSE), -- Amanida seitons -> Peix
-    ('77777777-0007-0007-0007-000000000087', '11111111-0001-0001-0001-000000000003', 0.100, 'kg', FALSE), -- Amanida brots -> Làctics
+    ('77777777-0007-0007-0007-000000000087', '11111111-0001-0001-0001-000000000015', 0.050, 'kg', FALSE), -- Amanida brots -> Formatge
     ('77777777-0007-0007-0007-000000000088', '11111111-0001-0001-0001-000000000005', 0.200, 'kg', FALSE), -- Salmorejo -> Tomàquet
     ('77777777-0007-0007-0007-000000000089', '11111111-0001-0001-0001-000000000022', 0.200, 'kg', FALSE), -- Empedrat -> Marisc (pop)
     ('77777777-0007-0007-0007-000000000090', '11111111-0001-0001-0001-000000000022', 0.300, 'kg', FALSE), -- Musclos -> Marisc
@@ -383,8 +382,80 @@ INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unit, is_opt
     -- Timbal de patata i ceba
     ('77777777-0007-0007-0007-000000000106', '11111111-0001-0001-0001-000000000019', 0.200, 'kg', FALSE), -- Patata
     ('77777777-0007-0007-0007-000000000106', '11111111-0001-0001-0001-000000000006', 0.050, 'kg', FALSE), -- Ceba
-    ('77777777-0007-0007-0007-000000000106', '11111111-0001-0001-0001-000000000008', 0.015, 'l',  FALSE)  -- Oli d'oliva
-    
+    ('77777777-0007-0007-0007-000000000106', '11111111-0001-0001-0001-000000000008', 0.015, 'l',  FALSE), -- Oli d'oliva
+
+    -- ============================================================================
+    -- CORRECCIONS: Ingredients que faltaven per coherència amb descripció/al·lèrgens
+    -- ============================================================================
+
+    -- Lasanya: bechamel necessita farina + mantega
+    ('77777777-0007-0007-0007-000000000001', '11111111-0001-0001-0001-000000000001', 0.050, 'kg', FALSE), -- Farina de blat
+    ('77777777-0007-0007-0007-000000000001', '11111111-0001-0001-0001-000000000004', 0.050, 'kg', FALSE), -- Mantega
+
+    -- Pollastre a l'all: necessita all
+    ('77777777-0007-0007-0007-000000000005', '11111111-0001-0001-0001-000000000007', 0.030, 'kg', FALSE), -- All
+
+    -- Salsa beixamel: base = farina + mantega + llet (llet ja hi és)
+    ('77777777-0007-0007-0007-000000000007', '11111111-0001-0001-0001-000000000001', 0.050, 'kg', FALSE), -- Farina de blat
+    ('77777777-0007-0007-0007-000000000007', '11111111-0001-0001-0001-000000000004', 0.030, 'kg', FALSE), -- Mantega
+
+    -- Bunyols de bacallà: rebossat = farina + ou
+    ('77777777-0007-0007-0007-000000000052', '11111111-0001-0001-0001-000000000001', 0.050, 'kg', FALSE), -- Farina de blat
+    ('77777777-0007-0007-0007-000000000052', '11111111-0001-0001-0001-000000000002', 0.050, 'kg', FALSE), -- Ou
+
+    -- Croquetó: bechamel = farina + llet
+    ('77777777-0007-0007-0007-000000000053', '11111111-0001-0001-0001-000000000001', 0.050, 'kg', FALSE), -- Farina de blat
+    ('77777777-0007-0007-0007-000000000053', '11111111-0001-0001-0001-000000000003', 0.100, 'l',  FALSE), -- Llet sencera
+
+    -- Ensaladilla cremosa: descripció diu tonyina
+    ('77777777-0007-0007-0007-000000000054', '11111111-0001-0001-0001-000000000021', 0.100, 'kg', FALSE), -- Peix Fresc (tonyina)
+
+    -- Calamars a l'andalusa: arrebossat = farina + ou
+    ('77777777-0007-0007-0007-000000000055', '11111111-0001-0001-0001-000000000001', 0.050, 'kg', FALSE), -- Farina de blat
+    ('77777777-0007-0007-0007-000000000055', '11111111-0001-0001-0001-000000000002', 0.030, 'kg', FALSE), -- Ou
+
+    -- Mandonguilles amb sípia: mandonguilles = carn (la sípia ja hi és com Marisc)
+    ('77777777-0007-0007-0007-000000000056', '11111111-0001-0001-0001-000000000024', 0.200, 'kg', FALSE), -- Carn de Porc
+
+    -- Ous estrellats: descripció diu patata
+    ('77777777-0007-0007-0007-000000000057', '11111111-0001-0001-0001-000000000019', 0.150, 'kg', FALSE), -- Patata
+
+    -- Suquet de peix: descripció diu musclos i gambes
+    ('77777777-0007-0007-0007-000000000065', '11111111-0001-0001-0001-000000000022', 0.150, 'kg', FALSE), -- Marisc (gambes+musclos)
+
+    -- Fideuà marinera: fideus = pasta = farina
+    ('77777777-0007-0007-0007-000000000077', '11111111-0001-0001-0001-000000000001', 0.200, 'kg', FALSE), -- Farina de blat (fideus)
+
+    -- Hamburgueses: pa de brioix = gluten
+    ('77777777-0007-0007-0007-000000000078', '11111111-0001-0001-0001-000000000001', 0.080, 'kg', FALSE), -- Farina de blat (pa brioix)
+    ('77777777-0007-0007-0007-000000000079', '11111111-0001-0001-0001-000000000001', 0.080, 'kg', FALSE), -- Farina de blat (pa brioix)
+
+    -- Salmorejo: porta pa (gluten) i ou dur
+    ('77777777-0007-0007-0007-000000000088', '11111111-0001-0001-0001-000000000001', 0.050, 'kg', FALSE), -- Farina de blat (pa)
+    ('77777777-0007-0007-0007-000000000088', '11111111-0001-0001-0001-000000000002', 0.020, 'kg', FALSE), -- Ou
+
+    -- Graellada de carn: descripció diu pollastre
+    ('77777777-0007-0007-0007-000000000093', '11111111-0001-0001-0001-000000000025', 0.200, 'kg', FALSE), -- Au (pollastre)
+
+    -- Txuleton: descripció diu patates fregides
+    ('77777777-0007-0007-0007-000000000068', '11111111-0001-0001-0001-000000000019', 0.300, 'kg', FALSE), -- Patata
+
+    -- Turbot a la brasa: descripció diu patata confitada
+    ('77777777-0007-0007-0007-000000000069', '11111111-0001-0001-0001-000000000019', 0.200, 'kg', FALSE), -- Patata
+
+    -- Llom de lluç a l'Orio: descripció diu patata confitada
+    ('77777777-0007-0007-0007-000000000098', '11111111-0001-0001-0001-000000000019', 0.200, 'kg', FALSE), -- Patata
+
+    -- Lionesa XL: pasta choux = farina + ou
+    ('77777777-0007-0007-0007-000000000074', '11111111-0001-0001-0001-000000000001', 0.050, 'kg', FALSE), -- Farina de blat
+    ('77777777-0007-0007-0007-000000000074', '11111111-0001-0001-0001-000000000002', 0.050, 'kg', FALSE), -- Ou
+
+    -- Tiramisú: porta ou
+    ('77777777-0007-0007-0007-000000000075', '11111111-0001-0001-0001-000000000002', 0.050, 'kg', FALSE), -- Ou
+
+    -- Flam d'avellanes: porta avellanes (fruits secs)
+    ('77777777-0007-0007-0007-000000000102', '11111111-0001-0001-0001-000000000027', 0.050, 'kg', FALSE)  -- Fruits secs (avellanes)
+
 ON CONFLICT DO NOTHING;
 
 -- ============================================================================
