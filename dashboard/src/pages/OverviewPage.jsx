@@ -129,9 +129,14 @@ function OverviewPage({ establishmentId, date }) {
         
         let newStats = [...mockStats]
         
+        // Obtenemos la fecha a comparar
+        const targetDateStr = date === 'realtime' 
+          ? new Date().toDateString() 
+          : new Date(date).toDateString()
+          
         // 1. Pedidos Hoy
         if (realOrders && realOrders.length > 0) {
-          const todaysOrders = realOrders.filter(o => new Date(o.created_at).toDateString() === new Date().toDateString())
+          const todaysOrders = realOrders.filter(o => new Date(o.created_at).toDateString() === targetDateStr)
           newStats[0] = { ...newStats[0], value: todaysOrders.length.toString(), trendLabel: 'Datos BD' }
         } else {
           newStats[0] = { ...newStats[0], value: '0', trendLabel: 'Sin datos' }
@@ -139,7 +144,7 @@ function OverviewPage({ establishmentId, date }) {
         
         // 2. Ingresos del Día
         if (salesRevenue && salesRevenue.length > 0) {
-          const todayRev = salesRevenue.find(s => new Date(s.order_date).toDateString() === new Date().toDateString())
+          const todayRev = salesRevenue.find(s => new Date(s.order_date).toDateString() === targetDateStr)
           if (todayRev) {
             newStats[1] = { ...newStats[1], value: `${Number(todayRev.revenue).toLocaleString('es-ES', { minimumFractionDigits: 0 })}€`, trendLabel: 'Datos BD' }
           } else {

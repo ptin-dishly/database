@@ -21,17 +21,18 @@ function Sidebar({ activePage, onNavigate }) {
      y opcionalmente badge (un número de notificación). */
   const menuItems = [
     { section: 'General' },
-    { id: 'overview',   icon: '📊', label: 'Vista General' },
-    { id: 'sales',      icon: '💰', label: 'Ventas' },
-    { id: 'orders',     icon: '🍽️', label: 'Pedidos' },
+    { id: 'overview', icon: '📊', label: 'Vista General' },
+    { id: 'sales', icon: '💰', label: 'Ventas' },
+    { id: 'orders', icon: '🍽️', label: 'Pedidos' },
 
     { section: 'Operaciones' },
-    { id: 'tables',     icon: '🪑', label: 'Ocupación' },
-    { id: 'staff',      icon: '👥', label: 'Personal' },
+    { id: 'tables', icon: '🪑', label: 'Ocupación' },
+    { id: 'staff', icon: '👥', label: 'Personal' },
 
     { section: 'Salud y Clientes' },
-    { id: 'allergens',  icon: '⚠️', label: 'Alérgenos', badge: 3 },
+    { id: 'allergens', icon: '⚠️', label: 'Alérgenos' },
   ]
+
 
   return (
     <aside className="sidebar">

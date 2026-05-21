@@ -31,7 +31,7 @@
 import { useState, useEffect } from 'react'
 import StatCard from '../components/StatCard'
 import Panel from '../components/Panel'
-import { getOrders, getSalesWeeklyRevenue, getSalesByEstablishment, getSalesByCategory, getSalesTopDishes } from '../api'
+import { getOrders, getSalesWeeklyRevenue, getSalesByEstablishment, getSalesByCategory, getSalesTopDishes, getTicketDistribution } from '../api'
 import './SalesPage.css'
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -121,6 +121,7 @@ function SalesPage({ establishmentId, date }) {
   const [establishmentsData, setEstablishmentsData] = useState(establishmentsMock)
   const [categoryBreakdownData, setCategoryBreakdownData] = useState(categoryBreakdown)
   const [topByRevenueData, setTopByRevenueData] = useState(topByRevenue)
+  const [ticketDistributionData, setTicketDistributionData] = useState(ticketDistribution)
 
   useEffect(() => {
     async function loadData() {
@@ -186,6 +187,18 @@ function SalesPage({ establishmentId, date }) {
           })))
         } else {
           setTopByRevenueData([])
+        }
+
+        const tickets = await getTicketDistribution(establishmentId, date)
+        if (tickets && tickets.length > 0) {
+          const totalTickets = tickets.reduce((sum, t) => sum + Number(t.tickets), 0)
+          setTicketDistributionData(tickets.map(t => ({
+            range: t.range,
+            count: Number(t.tickets),
+            pct: totalTickets > 0 ? Math.round((Number(t.tickets) / totalTickets) * 100) : 0
+          })))
+        } else {
+          setTicketDistributionData([])
         }
 
       } catch (error) {
@@ -416,7 +429,7 @@ function SalesPage({ establishmentId, date }) {
           subtitle="Rangos de precio por pedido"
         >
           <div className="ticket-distribution">
-            {ticketDistribution.map((range) => (
+            {ticketDistributionData.map((range) => (
               <div key={range.range} className="ticket-range-row">
                 <span className="ticket-range-label">{range.range}</span>
                 <div className="ticket-range-bar-track">

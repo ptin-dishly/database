@@ -159,19 +159,34 @@ export async function getAllergensFrequency(establishmentId, date) {
   return await fetchTable('view_allergens_frequency', buildQuery(establishmentId, date));
 }
 
-export async function getAllergensHeatmap() {
-  return await fetchTable('view_allergens_heatmap'); // estático
+export async function getAllergensHeatmap(establishmentId, date) {
+  return await fetchTable('view_allergens_heatmap', buildQuery(establishmentId, date));
 }
 
-export async function getAllergensPresence() {
-  return await fetchTable('view_allergens_presence'); // estático
+export async function getAllergensPresence(establishmentId, date) {
+  return await fetchTable('view_allergens_presence', buildQuery(establishmentId, date));
 }
 
 export async function getAllergensAlertsRecent(establishmentId, date) {
   return await fetchTable('view_allergens_alerts_recent', buildQuery(establishmentId, date));
 }
 
-export async function getAllergensAlternatives() {
-  return await fetchTable('view_allergens_alternatives'); // estático
+export async function getAllergensAlternatives(establishmentId, date) {
+  return await fetchTable('view_allergens_alternatives', buildQuery(establishmentId, date));
 }
 
+export async function getTicketDistribution(establishmentId, date) {
+  return await fetchTable('view_sales_ticket_distribution', buildQuery(establishmentId, date));
+}
+
+export async function getOrdersPipeline(establishmentId, date) {
+  return await fetchTable('view_orders_pipeline', buildQuery(establishmentId, date));
+}
+
+export async function getOrdersFeed(establishmentId, date) {
+  return await fetchTable('view_orders_feed', buildQuery(establishmentId, date));
+}
+
+export async function getTopCancellations(establishmentId, date) {
+  return await fetchTable('view_orders_top_cancellations', buildQuery(establishmentId, date));
+}

@@ -840,3 +840,87 @@ ON CONFLICT DO NOTHING;
 INSERT INTO recipe_alternatives (recipe_id, alternative_recipe_id, reason) VALUES
     ('77777777-0007-0007-0007-000000000001', '77777777-0007-0007-0007-000000000002', 'Lasaña tiene gluten, el salmón no.')
 ON CONFLICT DO NOTHING;
+
+
+
+-- ============================================================================
+-- 27. EXTRA ORDERS FOR DEMO (May 15-17) - Generated automatically
+-- ============================================================================
+DO $$
+DECLARE
+    est1_id UUID := '22222222-0002-0002-0002-000000000001';
+    est2_id UUID := '22222222-0002-0002-0002-000000000002';
+    tbl1_id UUID := '55555555-0005-0005-0005-000000000001';
+    tbl2_id UUID := '55555555-0005-0005-0005-000000000002';
+    d DATE;
+    o_id UUID;
+    oi_id UUID;
+    mci RECORD;
+BEGIN
+    FOR d IN SELECT unnest(ARRAY['2026-05-15'::DATE, '2026-05-16'::DATE, '2026-05-17'::DATE]) LOOP
+        -- Insert 4 orders for est1
+        FOR i IN 1..4 LOOP
+            o_id := gen_random_uuid();
+            INSERT INTO orders (id, establishment_id, table_id, status, created_at)
+            VALUES (o_id, est1_id, tbl1_id, 'served', d + time '14:30:00');
+            
+            -- Pick 2 menu items
+            FOR mci IN (SELECT m.id as m_id, m.recipe_id, r.name FROM menu_card_items m JOIN recipes r ON m.recipe_id = r.id LIMIT 2 OFFSET i) LOOP
+                oi_id := gen_random_uuid();
+                INSERT INTO order_items (id, order_id, menu_card_item_id, recipe_id, name, quantity, status)
+                VALUES (oi_id, o_id, mci.m_id, mci.recipe_id, mci.name, 2, 'served');
+                
+                -- Allergen alert on the 2nd item of the 1st order
+                IF i = 1 THEN
+                    INSERT INTO allergen_alerts (id, order_item_id, allergen_id, alert_severity, is_resolved, created_at)
+                    VALUES (gen_random_uuid(), oi_id, (SELECT id FROM allergens LIMIT 1 OFFSET 2), 'high', true, d + time '14:35:00');
+                END IF;
+            END LOOP;
+        END LOOP;
+
+        -- Insert 4 orders for est2
+        FOR i IN 1..4 LOOP
+            o_id := gen_random_uuid();
+            INSERT INTO orders (id, establishment_id, table_id, status, created_at)
+            VALUES (o_id, est2_id, tbl2_id, 'served', d + time '20:30:00');
+            
+            FOR mci IN (SELECT m.id as m_id, m.recipe_id, r.name FROM menu_card_items m JOIN recipes r ON m.recipe_id = r.id LIMIT 2 OFFSET (i+2)) LOOP
+                oi_id := gen_random_uuid();
+                INSERT INTO order_items (id, order_id, menu_card_item_id, recipe_id, name, quantity, status)
+                VALUES (oi_id, o_id, mci.m_id, mci.recipe_id, mci.name, 1, 'served');
+                
+                -- Allergen alert on the 2nd item of the 3rd order
+                IF i = 3 THEN
+                    INSERT INTO allergen_alerts (id, order_item_id, allergen_id, alert_severity, is_resolved, created_at)
+                    VALUES (gen_random_uuid(), oi_id, (SELECT id FROM allergens LIMIT 1 OFFSET 6), 'medium', false, d + time '20:40:00');
+                END IF;
+            END LOOP;
+        END LOOP;
+    END LOOP;
+END $$;
+DO $$
+DECLARE
+    est1_id UUID := '22222222-0002-0002-0002-000000000001';
+    est2_id UUID := '22222222-0002-0002-0002-000000000002';
+    d DATE := '2026-05-17'::DATE;
+BEGIN
+    -- Set a few orders to pending, preparing, ready on the 17th (today/realtime demo)
+    WITH cte AS (SELECT id FROM orders WHERE establishment_id = est1_id AND DATE(created_at) = d LIMIT 1)
+    UPDATE orders SET status = 'pending' WHERE id IN (SELECT id FROM cte);
+    
+    WITH cte AS (SELECT id FROM orders WHERE establishment_id = est1_id AND DATE(created_at) = d OFFSET 1 LIMIT 1)
+    UPDATE orders SET status = 'preparing' WHERE id IN (SELECT id FROM cte);
+    
+    WITH cte AS (SELECT id FROM orders WHERE establishment_id = est2_id AND DATE(created_at) = d LIMIT 1)
+    UPDATE orders SET status = 'confirmed' WHERE id IN (SELECT id FROM cte);
+
+    -- Create some cancellations for both establishments across the 3 days
+    UPDATE order_items 
+    SET status = 'cancelled' 
+    WHERE id IN (
+        SELECT oi.id FROM order_items oi
+        JOIN orders o ON oi.order_id = o.id
+        WHERE DATE(o.created_at) >= '2026-05-15'
+        LIMIT 5
+    );
+END $$;

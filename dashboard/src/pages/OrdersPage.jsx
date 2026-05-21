@@ -30,7 +30,7 @@
 import { useState, useEffect } from 'react'
 import StatCard from '../components/StatCard'
 import Panel from '../components/Panel'
-import { getOrders, getOrdersHourly, getOrdersRoomPerformance, getOrderStageTimes } from '../api'
+import { getOrders, getOrdersHourly, getOrdersRoomPerformance, getOrderStageTimes, getOrdersPipeline, getOrdersFeed, getTopCancellations } from '../api'
 import './OrdersPage.css'
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -109,6 +109,10 @@ function OrdersPage({ establishmentId, date }) {
   const [hourlyOrdersData, setHourlyOrdersData] = useState(hourlyOrders)
   const [roomPerformanceData, setRoomPerformanceData] = useState(roomPerformance)
   const [avgTimesData, setAvgTimesData] = useState(avgTimes)
+  
+  const [pipelineData, setPipelineData] = useState(pipelineMock)
+  const [ordersFeedData, setOrdersFeedData] = useState(ordersFeed)
+  const [topCancellationsData, setTopCancellationsData] = useState(topCancellations)
 
   useEffect(() => {
     async function loadData() {
@@ -178,6 +182,48 @@ function OrdersPage({ establishmentId, date }) {
             { label: 'Servido',    time: '-', color: '#34d399' },
           ])
         }
+
+        const pipeline = await getOrdersPipeline(establishmentId, date)
+        if (pipeline && pipeline.length > 0) {
+          const config = [
+            { id: 'pending',   label: 'Recibidos', icon: '📥', color: 'var(--accent-warning)', count: 0 },
+            { id: 'preparing', label: 'En Cocina', icon: '🍳', color: 'var(--accent-primary)', count: 0 },
+            { id: 'confirmed', label: 'Listos',    icon: '🔔', color: 'var(--accent-info)',    count: 0 },
+            { id: 'served',    label: 'Servidos',  icon: '✅', color: 'var(--accent-success)', count: 0 },
+          ]
+          pipeline.forEach(p => {
+            const st = config.find(c => c.id === p.stage)
+            if (st) st.count = Number(p.count)
+          })
+          setPipelineData(config)
+        } else {
+          setPipelineData(pipelineMock.map(p => ({ ...p, count: 0 })))
+        }
+
+        const feed = await getOrdersFeed(establishmentId, date)
+        if (feed && feed.length > 0) {
+          setOrdersFeedData(feed.slice(0, 10).map(f => ({
+            id: f.id.substring(0, 8),
+            time: f.time,
+            table: f.table_name || 'Mesa ?',
+            status: f.status,
+            items: f.summary || 'Sin items'
+          })))
+        } else {
+          setOrdersFeedData([])
+        }
+
+        const cancellations = await getTopCancellations(establishmentId, date)
+        if (cancellations && cancellations.length > 0) {
+          setTopCancellationsData(cancellations.map(c => ({
+            dish: c.dish,
+            quantity: Number(c.quantity),
+            reason: c.reason
+          })))
+        } else {
+          setTopCancellationsData([])
+        }
+
       } catch (err) {
         console.error("Error loading orders page data", err)
       }
@@ -271,19 +317,19 @@ function OrdersPage({ establishmentId, date }) {
         subtitle="Estado actual de todos los pedidos — en tiempo real"
       >
         <div className="pipeline-container">
-          {pipelineMock.map((stage, i) => (
-            <>
-              <div key={stage.status} className="pipeline-stage">
+          {pipelineData.map((stage, i) => (
+            <div key={stage.label || stage.status} style={{display: 'contents'}}>
+              <div className="pipeline-stage">
                 <div className="pipeline-stage-count" style={{ color: stage.color }}>
                   {stage.count}
                 </div>
                 <div className="pipeline-stage-label">{stage.label}</div>
                 <div className="pipeline-stage-bar" style={{ background: stage.color }} />
               </div>
-              {i < pipelineMock.length - 1 && (
+              {i < pipelineData.length - 1 && (
                 <div key={`arrow-${i}`} className="pipeline-arrow">→</div>
               )}
-            </>
+            </div>
           ))}
         </div>
       </Panel>
@@ -302,7 +348,7 @@ function OrdersPage({ establishmentId, date }) {
           subtitle="Últimas horas — scroll para ver más"
         >
           <div className="orders-feed">
-            {ordersFeed.map((order) => (
+            {ordersFeedData.map((order) => (
               <div key={order.id} className={`order-card status-${order.status}`}>
                 <span className="order-card-id">{order.id}</span>
                 <div className="order-card-info">
@@ -404,14 +450,14 @@ function OrdersPage({ establishmentId, date }) {
           subtitle="Platos más cancelados hoy — detectar problemas"
         >
           <div className="cancellation-list">
-            {topCancellations.map((item) => (
-              <div key={item.name} className="cancellation-item">
-                <span className="cancellation-item-icon">{item.icon}</span>
+            {topCancellationsData.map((item) => (
+              <div key={item.dish} className="cancellation-item">
+                <span className="cancellation-item-icon">🚫</span>
                 <div className="cancellation-item-info">
-                  <div className="cancellation-item-name">{item.name}</div>
+                  <div className="cancellation-item-name">{item.dish}</div>
                   <div className="cancellation-item-reason">{item.reason}</div>
                 </div>
-                <span className="cancellation-item-count">×{item.count}</span>
+                <span className="cancellation-item-count">×{item.quantity}</span>
               </div>
             ))}
           </div>

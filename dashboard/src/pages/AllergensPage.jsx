@@ -159,23 +159,34 @@ function AllergensPage({ establishmentId, date }) {
               severity: baseAllergen?.severity || 'medium'
             }
           }))
+        } else {
+          setComensalsWithAllergies("0")
+          setEu14AllergensData(eu14Allergens.map(a => ({
+            ...a,
+            comensals: 0,
+            pct: 0
+          })))
         }
         
-        const heatmap = await getAllergensHeatmap() // static
+        const heatmap = await getAllergensHeatmap(establishmentId, date)
         if (heatmap && heatmap.length > 0) {
           setHeatmapDataList(heatmap.map(h => ({
             dish: h.dish_name,
             allergens: h.allergens
           })))
+        } else {
+          setHeatmapDataList([])
         }
 
-        const presence = await getAllergensPresence() // static
+        const presence = await getAllergensPresence(establishmentId, date)
         if (presence && presence.length > 0) {
           setPresenceDistributionData(presence.map((p, i) => ({
             label: p.label,
             value: Number(p.value),
             color: i === 0 ? 'var(--accent-danger)' : i === 1 ? 'var(--accent-warning)' : 'var(--accent-info)'
           })))
+        } else {
+          setPresenceDistributionData([])
         }
 
         const recent = await getAllergensAlertsRecent(establishmentId, date)
@@ -194,7 +205,7 @@ function AllergensPage({ establishmentId, date }) {
           })))
         }
 
-        const alts = await getAllergensAlternatives() // static
+        const alts = await getAllergensAlternatives(establishmentId, date)
         if (alts && alts.length > 0) {
           setAlternativesData(alts.map(a => ({
             original: a.original,
@@ -202,6 +213,8 @@ function AllergensPage({ establishmentId, date }) {
             replacement: a.replacement,
             reason: a.reason || 'Sugerencia automática de cocina'
           })))
+        } else {
+          setAlternativesData([])
         }
       } catch (err) {
         console.error("Error fetching allergen data", err)
@@ -296,7 +309,6 @@ function AllergensPage({ establishmentId, date }) {
             >
               <span className="allergen-item-icon">{a.icon}</span>
               <span className="allergen-item-name">{a.nameEs}</span>
-              <span className="allergen-item-eu">UE #{a.euNumber}</span>
               <span className="allergen-item-count">{a.comensals}</span>
               <span className="allergen-item-label">comensales</span>
               <div className="allergen-item-bar">
