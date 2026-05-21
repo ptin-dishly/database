@@ -146,17 +146,13 @@ function AllergensPage({ establishmentId, date }) {
         if (freq && freq.length > 0) {
           const totalComensals = freq.reduce((sum, f) => sum + Number(f.comensals_count), 0)
           setComensalsWithAllergies(totalComensals.toString())
-          setEu14AllergensData(freq.map(f => {
-            const count = Number(f.comensals_count)
-            const baseAllergen = eu14Allergens.find(a => a.euNumber === Number(f.eu_number))
+          setEu14AllergensData(eu14Allergens.map(baseAllergen => {
+            const f = freq.find(x => Number(x.eu_number) === baseAllergen.euNumber)
+            const count = f ? Number(f.comensals_count) : 0
             return {
-              euNumber: Number(f.eu_number),
-              code: f.code,
-              nameEs: f.name_es,
-              icon: baseAllergen?.icon || '⚠️',
+              ...baseAllergen,
               comensals: count,
-              pct: totalComensals > 0 ? Math.round((count / totalComensals) * 100) : 0,
-              severity: baseAllergen?.severity || 'medium'
+              pct: totalComensals > 0 ? Math.round((count / totalComensals) * 100) : 0
             }
           }))
         } else {
