@@ -138,24 +138,33 @@ function SalesPage({ establishmentId, date }) {
 
         const rev = await getSalesWeeklyRevenue(establishmentId, date)
         if (rev && rev.length > 0) {
-          setWeeklyRevenueData(rev.map(r => ({
-            day: new Date(r.order_date).toLocaleDateString('es-ES', {weekday: 'short'}).substring(0, 3),
-            revenue: Number(r.revenue),
-            orders: Number(r.total_orders)
-          })))
+          const groupedRev = {}
+          rev.forEach(r => {
+            const d = new Date(r.order_date).toLocaleDateString('es-ES', {weekday: 'short'}).substring(0, 3)
+            if (!groupedRev[d]) groupedRev[d] = { day: d, revenue: 0, orders: 0 }
+            groupedRev[d].revenue += Number(r.revenue)
+            groupedRev[d].orders += Number(r.total_orders)
+          })
+          setWeeklyRevenueData(Object.values(groupedRev))
         } else {
           setWeeklyRevenueData([])
         }
 
         const est = await getSalesByEstablishment('all', date)
         if (est && est.length > 0) {
-          setEstablishmentsData(est.map((e, i) => ({
+          const groupedEst = {}
+          est.forEach(e => {
+            if (!groupedEst[e.name]) groupedEst[e.name] = { ...e, revenue: 0, total_orders: 0 }
+            groupedEst[e.name].revenue += Number(e.revenue)
+            groupedEst[e.name].total_orders += Number(e.total_orders)
+          })
+          setEstablishmentsData(Object.values(groupedEst).map((e, i) => ({
             name: e.establishment_name,
             address: e.address,
-            revenue: Number(e.revenue),
-            orders: Number(e.total_orders),
+            revenue: e.revenue,
+            orders: e.total_orders,
             color: establishmentsMock[i % establishmentsMock.length]?.color || '#818cf8',
-            icon: e.establishment_name.toLowerCase().includes('port') ? '⛵' : (e.establishment_name.toLowerCase().includes('centro') ? '🏙️' : '🌳')
+            icon: e.establishment_name.toLowerCase().includes('racó') ? '🥩' : (e.establishment_name.toLowerCase().includes('maria') ? '🍷' : '🏢')
           })))
         } else {
           setEstablishmentsData([])
@@ -163,11 +172,17 @@ function SalesPage({ establishmentId, date }) {
 
         const cat = await getSalesByCategory(establishmentId, date)
         if (cat && cat.length > 0) {
-          const total = cat.reduce((sum, c) => sum + Number(c.revenue), 0)
-          setCategoryBreakdownData(cat.map((c, i) => ({
-            label: c.category_name,
-            amount: Number(c.revenue),
-            pct: total > 0 ? Math.round((Number(c.revenue) / total) * 100) : 0,
+          const groupedCat = {}
+          cat.forEach(c => {
+            if (!groupedCat[c.category_name]) groupedCat[c.category_name] = 0
+            groupedCat[c.category_name] += Number(c.revenue)
+          })
+          const total = Object.values(groupedCat).reduce((sum, rev) => sum + rev, 0)
+          
+          setCategoryBreakdownData(Object.entries(groupedCat).map(([label, amount], i) => ({
+            label,
+            amount,
+            pct: total > 0 ? Math.round((amount / total) * 100) : 0,
             icon: categoryBreakdown[i % categoryBreakdown.length]?.icon || '🍽️',
             color: categoryBreakdown[i % categoryBreakdown.length]?.color || '#818cf8'
           })))
@@ -177,12 +192,21 @@ function SalesPage({ establishmentId, date }) {
 
         const top = await getSalesTopDishes(establishmentId, date)
         if (top && top.length > 0) {
-          setTopByRevenueData(top.map((t, i) => ({
+          const groupedTop = {}
+          top.forEach(t => {
+            if (!groupedTop[t.dish_name]) groupedTop[t.dish_name] = { ...t, qty_sold: 0, revenue: 0 }
+            groupedTop[t.dish_name].qty_sold += Number(t.qty_sold)
+            groupedTop[t.dish_name].revenue += Number(t.revenue)
+          })
+          
+          const sortedTop = Object.values(groupedTop).sort((a, b) => b.revenue - a.revenue)
+          
+          setTopByRevenueData(sortedTop.slice(0, 10).map((t, i) => ({
             rank: i + 1,
             name: t.dish_name,
             price: Number(t.price),
-            qty: Number(t.qty_sold),
-            revenue: Number(t.revenue),
+            qty: t.qty_sold,
+            revenue: t.revenue,
             category: t.category_name
           })))
         } else {
@@ -191,11 +215,17 @@ function SalesPage({ establishmentId, date }) {
 
         const tickets = await getTicketDistribution(establishmentId, date)
         if (tickets && tickets.length > 0) {
-          const totalTickets = tickets.reduce((sum, t) => sum + Number(t.tickets), 0)
-          setTicketDistributionData(tickets.map(t => ({
-            range: t.range,
-            count: Number(t.tickets),
-            pct: totalTickets > 0 ? Math.round((Number(t.tickets) / totalTickets) * 100) : 0
+          const groupedTickets = {}
+          tickets.forEach(t => {
+            if (!groupedTickets[t.range]) groupedTickets[t.range] = 0
+            groupedTickets[t.range] += Number(t.tickets)
+          })
+          const totalTickets = Object.values(groupedTickets).reduce((sum, count) => sum + count, 0)
+          
+          setTicketDistributionData(Object.entries(groupedTickets).map(([range, count]) => ({
+            range,
+            count,
+            pct: totalTickets > 0 ? Math.round((count / totalTickets) * 100) : 0
           })))
         } else {
           setTicketDistributionData([])

@@ -73,7 +73,14 @@ function StaffPage({ establishmentId, date }) {
         if (perf && perf.length > 0) {
           let totOrders = 0;
           let totRev = 0;
-          const sortedPerf = [...perf].sort((a, b) => Number(b.revenue_generated) - Number(a.revenue_generated))
+          const groupedPerf = {}
+          perf.forEach(p => {
+            if (!groupedPerf[p.user_id]) groupedPerf[p.user_id] = { ...p, orders_served: 0, revenue_generated: 0 }
+            groupedPerf[p.user_id].orders_served += Number(p.orders_served)
+            groupedPerf[p.user_id].revenue_generated += Number(p.revenue_generated)
+          })
+          const sortedPerf = Object.values(groupedPerf).sort((a, b) => Number(b.revenue_generated) - Number(a.revenue_generated))
+          
           setStaffPerformanceData(sortedPerf.map((p, i) => {
             const ords = Number(p.orders_served);
             const rev = Number(p.revenue_generated);
@@ -117,7 +124,8 @@ function StaffPage({ establishmentId, date }) {
 
         const activity = await getStaffActivityLog(establishmentId, date)
         if (activity && activity.length > 0) {
-          setRecentActivityData(activity.map(a => ({
+          const sortedActivity = [...activity].sort((a,b) => a.time < b.time ? 1 : -1)
+          setRecentActivityData(sortedActivity.slice(0, 15).map(a => ({
             id: a.id,
             time: new Date(a.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
             user: a.user_name || 'Sistema',

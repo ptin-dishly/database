@@ -135,26 +135,35 @@ function OrdersPage({ establishmentId, date }) {
 
         const hourly = await getOrdersHourly(establishmentId, date)
         if (hourly && hourly.length > 0) {
-          setHourlyOrdersData(hourly.map(h => ({
-            hour: h.hour_of_day.toString(),
-            total: Number(h.total_orders),
-            served: Number(h.served_orders),
-            active: Number(h.active_orders)
-          })))
+          const groupedHourly = {}
+          hourly.forEach(h => {
+            const hr = h.hour_of_day.toString()
+            if (!groupedHourly[hr]) groupedHourly[hr] = { hour: hr, total: 0, served: 0, active: 0 }
+            groupedHourly[hr].total += Number(h.total_orders)
+            groupedHourly[hr].served += Number(h.served_orders)
+            groupedHourly[hr].active += Number(h.active_orders)
+          })
+          setHourlyOrdersData(Object.values(groupedHourly).sort((a,b) => Number(a.hour) - Number(b.hour)))
         } else {
           setHourlyOrdersData([])
         }
 
         const roomPerf = await getOrdersRoomPerformance(establishmentId, date)
         if (roomPerf && roomPerf.length > 0) {
-          setRoomPerformanceData(roomPerf.map((r, i) => ({
+          const groupedRooms = {}
+          roomPerf.forEach(r => {
+            if (!groupedRooms[r.room_name]) groupedRooms[r.room_name] = { ...r, total_orders: 0, total_tables: 0 }
+            groupedRooms[r.room_name].total_orders += Number(r.total_orders)
+            groupedRooms[r.room_name].total_tables += Number(r.total_tables)
+          })
+          setRoomPerformanceData(Object.values(groupedRooms).map((r, i) => ({
             name: r.room_name,
             floor: `Planta ${r.floor || 0}`,
             icon: roomPerformance[i % roomPerformance.length]?.icon || '🏠',
             color: roomPerformance[i % roomPerformance.length]?.color || '#818cf8',
-            orders: Number(r.total_orders),
+            orders: r.total_orders,
             avgTime: '15 min',
-            tables: Number(r.total_tables)
+            tables: r.total_tables
           })))
         } else {
           setRoomPerformanceData([])
@@ -162,10 +171,13 @@ function OrdersPage({ establishmentId, date }) {
 
         const stageTimes = await getOrderStageTimes(establishmentId, date)
         if (stageTimes && stageTimes.length > 0) {
-          // Find minutes for each stage we care about
           const getMins = (status) => {
-            const found = stageTimes.find(s => s.status === status)
-            return found ? `${found.avg_minutes} min` : '-'
+            const foundRows = stageTimes.filter(s => s.status === status)
+            if (foundRows.length > 0) {
+              const avg = Math.round(foundRows.reduce((sum, s) => sum + Number(s.avg_minutes), 0) / foundRows.length)
+              return `${avg} min`
+            }
+            return '-'
           }
           
           setAvgTimesData([
@@ -193,7 +205,7 @@ function OrdersPage({ establishmentId, date }) {
           ]
           pipeline.forEach(p => {
             const st = config.find(c => c.id === p.stage)
-            if (st) st.count = Number(p.count)
+            if (st) st.count += Number(p.count)
           })
           setPipelineData(config)
         } else {
@@ -202,7 +214,8 @@ function OrdersPage({ establishmentId, date }) {
 
         const feed = await getOrdersFeed(establishmentId, date)
         if (feed && feed.length > 0) {
-          setOrdersFeedData(feed.slice(0, 10).map(f => ({
+          const sortedFeed = [...feed].sort((a,b) => a.time < b.time ? 1 : -1)
+          setOrdersFeedData(sortedFeed.slice(0, 10).map(f => ({
             id: f.id.substring(0, 8),
             time: f.time,
             table: f.table_name || 'Mesa ?',
@@ -215,9 +228,15 @@ function OrdersPage({ establishmentId, date }) {
 
         const cancellations = await getTopCancellations(establishmentId, date)
         if (cancellations && cancellations.length > 0) {
-          setTopCancellationsData(cancellations.map(c => ({
+          const groupedCancels = {}
+          cancellations.forEach(c => {
+            if (!groupedCancels[c.dish]) groupedCancels[c.dish] = { ...c, quantity: 0 }
+            groupedCancels[c.dish].quantity += Number(c.quantity)
+          })
+          const sortedCancels = Object.values(groupedCancels).sort((a,b) => b.quantity - a.quantity)
+          setTopCancellationsData(sortedCancels.map(c => ({
             dish: c.dish,
-            quantity: Number(c.quantity),
+            quantity: c.quantity,
             reason: c.reason
           })))
         } else {

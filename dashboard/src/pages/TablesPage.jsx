@@ -105,19 +105,24 @@ function TablesPage({ establishmentId, date }) {
 
         const sizeDist = await getTablesSizeDistribution(establishmentId, date)
         if (sizeDist && sizeDist.length > 0) {
+          const groupedSizes = {}
+          sizeDist.forEach(s => {
+            if (!groupedSizes[s.capacity]) groupedSizes[s.capacity] = { capacity: s.capacity, total: 0, occupied: 0 }
+            groupedSizes[s.capacity].total += Number(s.total_tables)
+            groupedSizes[s.capacity].occupied += Number(s.occupied_tables)
+          })
+          
           let totTables = 0;
           let occTables = 0;
           
-          setTableSizeDistData(sizeDist.map((s, i) => {
-            const total = Number(s.total_tables)
-            const occupied = Number(s.occupied_tables)
-            totTables += total;
-            occTables += occupied;
+          setTableSizeDistData(Object.values(groupedSizes).sort((a,b) => Number(a.capacity) - Number(b.capacity)).map((s, i) => {
+            totTables += s.total;
+            occTables += s.occupied;
             return {
               size: `${s.capacity} pax`,
-              total: total,
-              occupied: occupied,
-              pct: total > 0 ? Math.round((occupied / total) * 100) : 0,
+              total: s.total,
+              occupied: s.occupied,
+              pct: s.total > 0 ? Math.round((s.occupied / s.total) * 100) : 0,
               color: tableSizeDistribution[i % tableSizeDistribution.length]?.color || '#60a5fa'
             }
           }))

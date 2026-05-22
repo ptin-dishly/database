@@ -147,8 +147,8 @@ function AllergensPage({ establishmentId, date }) {
           const totalComensals = freq.reduce((sum, f) => sum + Number(f.comensals_count), 0)
           setComensalsWithAllergies(totalComensals.toString())
           setEu14AllergensData(eu14Allergens.map(baseAllergen => {
-            const f = freq.find(x => Number(x.eu_number) === baseAllergen.euNumber)
-            const count = f ? Number(f.comensals_count) : 0
+            const counts = freq.filter(x => Number(x.eu_number) === baseAllergen.euNumber)
+            const count = counts.reduce((sum, f) => sum + Number(f.comensals_count), 0)
             return {
               ...baseAllergen,
               comensals: count,
@@ -166,7 +166,11 @@ function AllergensPage({ establishmentId, date }) {
         
         const heatmap = await getAllergensHeatmap(establishmentId, date)
         if (heatmap && heatmap.length > 0) {
-          setHeatmapDataList(heatmap.map(h => ({
+          const uniqueHeatmap = {}
+          heatmap.forEach(h => {
+            if (!uniqueHeatmap[h.dish_name]) uniqueHeatmap[h.dish_name] = h
+          })
+          setHeatmapDataList(Object.values(uniqueHeatmap).map(h => ({
             dish: h.dish_name,
             allergens: h.allergens
           })))
@@ -176,9 +180,14 @@ function AllergensPage({ establishmentId, date }) {
 
         const presence = await getAllergensPresence(establishmentId, date)
         if (presence && presence.length > 0) {
-          setPresenceDistributionData(presence.map((p, i) => ({
-            label: p.label,
-            value: Number(p.value),
+          const groupedPresence = {}
+          presence.forEach(p => {
+            if (!groupedPresence[p.label]) groupedPresence[p.label] = 0
+            groupedPresence[p.label] += Number(p.value)
+          })
+          setPresenceDistributionData(Object.entries(groupedPresence).map(([label, value], i) => ({
+            label,
+            value,
             color: i === 0 ? 'var(--accent-danger)' : i === 1 ? 'var(--accent-warning)' : 'var(--accent-info)'
           })))
         } else {
@@ -187,7 +196,8 @@ function AllergensPage({ establishmentId, date }) {
 
         const recent = await getAllergensAlertsRecent(establishmentId, date)
         if (recent && recent.length > 0) {
-          setRecentAlerts(recent.map(r => ({
+          const sortedRecent = [...recent].sort((a,b) => a.time < b.time ? 1 : -1)
+          setRecentAlerts(sortedRecent.map(r => ({
             id: r.id,
             time: r.time,
             date: r.date,
@@ -203,7 +213,11 @@ function AllergensPage({ establishmentId, date }) {
 
         const alts = await getAllergensAlternatives(establishmentId, date)
         if (alts && alts.length > 0) {
-          setAlternativesData(alts.map(a => ({
+          const uniqueAlts = {}
+          alts.forEach(a => {
+            if (!uniqueAlts[a.original]) uniqueAlts[a.original] = a
+          })
+          setAlternativesData(Object.values(uniqueAlts).map(a => ({
             original: a.original,
             originalAllergens: a.original_allergens || [],
             replacement: a.replacement,

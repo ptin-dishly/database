@@ -144,9 +144,10 @@ function OverviewPage({ establishmentId, date }) {
         
         // 2. Ingresos del Día
         if (salesRevenue && salesRevenue.length > 0) {
-          const todayRev = salesRevenue.find(s => new Date(s.order_date).toDateString() === targetDateStr)
-          if (todayRev) {
-            newStats[1] = { ...newStats[1], value: `${Number(todayRev.revenue).toLocaleString('es-ES', { minimumFractionDigits: 0 })}€`, trendLabel: 'Datos BD' }
+          const todayRevs = salesRevenue.filter(s => new Date(s.order_date).toDateString() === targetDateStr)
+          if (todayRevs.length > 0) {
+            const totalRev = todayRevs.reduce((sum, s) => sum + Number(s.revenue), 0)
+            newStats[1] = { ...newStats[1], value: `${totalRev.toLocaleString('es-ES', { minimumFractionDigits: 0 })}€`, trendLabel: 'Datos BD' }
           } else {
             newStats[1] = { ...newStats[1], value: '0€', trendLabel: 'Sin datos' }
           }
@@ -184,9 +185,10 @@ function OverviewPage({ establishmentId, date }) {
         
         // 5. Tiempo Medio Servicio
         if (stageTimes && stageTimes.length > 0) {
-          const served = stageTimes.find(s => s.status === 'served')
-          if (served) {
-            newStats[4] = { ...newStats[4], value: `${served.avg_minutes} min`, trendLabel: 'Desde comanda' }
+          const servedRows = stageTimes.filter(s => s.status === 'served')
+          if (servedRows.length > 0) {
+            const avgMins = Math.round(servedRows.reduce((sum, s) => sum + Number(s.avg_minutes), 0) / servedRows.length)
+            newStats[4] = { ...newStats[4], value: `${avgMins} min`, trendLabel: 'Desde comanda' }
           } else {
             newStats[4] = { ...newStats[4], value: '-', trendLabel: 'Sin datos' }
           }
@@ -198,13 +200,22 @@ function OverviewPage({ establishmentId, date }) {
         
         // Top Platos
         if (topDishesReq && topDishesReq.length > 0) {
-          const maxOrders = Math.max(...topDishesReq.map(d => Number(d.qty_sold))) || 1
-          setTopDishesData(topDishesReq.slice(0, 5).map((d, i) => ({
+          const groupedDishes = {}
+          topDishesReq.forEach(d => {
+            if (!groupedDishes[d.dish_name]) {
+              groupedDishes[d.dish_name] = { name: d.dish_name, category: d.category_name, orders: 0 }
+            }
+            groupedDishes[d.dish_name].orders += Number(d.qty_sold)
+          })
+          const sortedDishes = Object.values(groupedDishes).sort((a, b) => b.orders - a.orders)
+          const maxOrders = sortedDishes.length > 0 ? sortedDishes[0].orders : 1
+          
+          setTopDishesData(sortedDishes.slice(0, 5).map((d, i) => ({
             rank: i + 1,
-            name: d.dish_name,
-            category: d.category_name,
-            orders: Number(d.qty_sold),
-            pct: Math.round((Number(d.qty_sold) / maxOrders) * 100)
+            name: d.name,
+            category: d.category,
+            orders: d.orders,
+            pct: Math.round((d.orders / maxOrders) * 100)
           })))
         } else {
           setTopDishesData([])
@@ -230,7 +241,7 @@ function OverviewPage({ establishmentId, date }) {
           hourlyActivityReq.forEach(h => {
             const hr = Number(h.hour_of_day)
             if (hr >= 8 && hr <= 22) {
-              hoursMap[hr - 8] = Number(h.total_orders)
+              hoursMap[hr - 8] += Number(h.total_orders)
             }
           })
           const maxVal = Math.max(...hoursMap) || 1
