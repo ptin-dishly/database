@@ -218,34 +218,6 @@ function StaffPage({ establishmentId, date }) {
         
         {/* Lado Izquierdo: Zonas y Actividad */}
         <div className="staff-left-col">
-          {/* Asignación de Zonas */}
-          <Panel
-            title="Asignación de Zonas"
-            icon="🗺️"
-            subtitle="Carga de trabajo por sala"
-          >
-            <div className="zone-assignments-list">
-              {zoneAssignmentsData.map(zone => (
-                <div key={zone.id} className={`zone-card ${zone.status}`}>
-                  <div className="zone-info">
-                    <h4 className="zone-name">{zone.room}</h4>
-                    <div className="zone-stats">
-                      Mesas Activas: <strong>{zone.activeTables}/{zone.tablesAssigned}</strong>
-                    </div>
-                  </div>
-                  
-                  <div className="zone-waiter">
-                    <div className="waiter-avatar">{zone.avatar}</div>
-                    <div className="waiter-details">
-                      <span className="waiter-name">{zone.waiter}</span>
-                      {getStatusBadge(zone.status)}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Panel>
-
           {/* Actividad Reciente */}
           <Panel
             title="Actividad Relevante"

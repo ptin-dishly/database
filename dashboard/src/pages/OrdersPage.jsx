@@ -488,36 +488,6 @@ function OrdersPage({ establishmentId, date }) {
           </div>
         </Panel>
 
-        {/* Rendimiento por sala */}
-        <Panel
-          title="Rendimiento por Sala"
-          icon="🏠"
-          subtitle="Comparativa de carga de trabajo"
-        >
-          <div className="room-performance">
-            {roomPerformanceData.map((room) => (
-              <div key={room.name} className="room-row">
-                <div className="room-icon" style={{ background: `${room.color}15`, border: `1px solid ${room.color}30` }}>
-                  {room.icon}
-                </div>
-                <div className="room-info">
-                  <div className="room-name">{room.name}</div>
-                  <div className="room-detail">{room.floor} · {room.tables} mesas</div>
-                </div>
-                <div className="room-stats">
-                  <div className="room-stat">
-                    <div className="room-stat-value">{room.orders}</div>
-                    <div className="room-stat-label">pedidos</div>
-                  </div>
-                  <div className="room-stat">
-                    <div className="room-stat-value">{room.avgTime}</div>
-                    <div className="room-stat-label">t. medio</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Panel>
       </div>
     </div>
   )
