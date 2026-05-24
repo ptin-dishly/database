@@ -136,8 +136,7 @@ function OverviewPage({ establishmentId, date }) {
           
         // 1. Pedidos Hoy
         if (realOrders && realOrders.length > 0) {
-          const todaysOrders = realOrders.filter(o => new Date(o.created_at).toDateString() === targetDateStr)
-          newStats[0] = { ...newStats[0], value: todaysOrders.length.toString(), trendLabel: 'Datos BD' }
+          newStats[0] = { ...newStats[0], value: realOrders.length.toString(), trendLabel: 'Datos BD' }
         } else {
           newStats[0] = { ...newStats[0], value: '0', trendLabel: 'Sin datos' }
         }
