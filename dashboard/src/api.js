@@ -75,7 +75,15 @@ export async function getTablesList() {
 }
 
 export async function getAllergenAlerts(establishmentId) {
-  return await fetchTable('allergen_alerts', buildQuery(establishmentId, null, 'created_at'));
+  const params = new URLSearchParams();
+  if (establishmentId && establishmentId !== 'all') {
+    params.append('establishment_id', `eq.${establishmentId}`);
+  }
+  params.append('is_resolved', 'eq.false');
+  const today = new Date().toISOString().split('T')[0];
+  params.append('created_at', `gte.${today}T00:00:00`);
+  params.append('created_at', `lte.${today}T23:59:59`);
+  return await fetchTable('allergen_alerts', `?${params.toString()}`);
 }
 
 export async function getStaff() {
