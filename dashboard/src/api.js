@@ -7,6 +7,10 @@
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api'; // Usa la variable de entorno en prod o el proxy de Vite en local
 
+function localDateStr(date = new Date()) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+}
+
 /**
  * Realiza una petición GET a una tabla de PostgREST.
  * @param {string} endpoint - El nombre de la tabla o vista (ej. 'orders', 'menu_items')
@@ -41,7 +45,7 @@ function buildQuery(establishmentId, date, dateColumn = 'date') {
   if (date) {
     let dateStr = date;
     if (date === 'realtime') {
-      dateStr = new Date().toISOString().split('T')[0];
+      dateStr = localDateStr();
     }
     
     // Si la columna es un timestamp (ej. created_at), debemos buscar entre inicio y fin del día
@@ -80,7 +84,7 @@ export async function getAllergenAlerts(establishmentId) {
     params.append('establishment_id', `eq.${establishmentId}`);
   }
   params.append('is_resolved', 'eq.false');
-  const today = new Date().toISOString().split('T')[0];
+  const today = localDateStr();
   params.append('created_at', `gte.${today}T00:00:00`);
   params.append('created_at', `lte.${today}T23:59:59`);
   return await fetchTable('allergen_alerts', `?${params.toString()}`);
@@ -105,8 +109,8 @@ export async function getSalesWeeklyRevenue(establishmentId, date) {
   const pastDate = new Date(targetDate);
   pastDate.setDate(pastDate.getDate() - 6);
   
-  const targetDateStr = targetDate.toISOString().split('T')[0];
-  const pastDateStr = pastDate.toISOString().split('T')[0];
+  const targetDateStr = localDateStr(targetDate);
+  const pastDateStr = localDateStr(pastDate);
   
   params.append('order_date', `gte.${pastDateStr}`);
   params.append('order_date', `lte.${targetDateStr}`);
