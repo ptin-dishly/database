@@ -282,7 +282,7 @@ function OrdersPage({ establishmentId, date }) {
         <StatCard
           icon="🔄"
           label="En Curso Ahora"
-          value="35"
+          value={pipelineData.filter(p => ['pending','preparing','confirmed'].includes(p.id)).reduce((s,p) => s + p.count, 0).toString()}
           trend="neutral"
           trendValue="pendientes + cocina"
           accentColor="#60a5fa"
