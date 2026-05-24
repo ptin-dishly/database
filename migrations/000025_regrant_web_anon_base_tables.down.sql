@@ -1,0 +1,2 @@
+-- No-op: revoking blanket SELECT from web_anon would break all views too.
+-- Intentionally left empty.
