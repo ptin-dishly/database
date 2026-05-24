@@ -135,11 +135,12 @@ function AllergensPage({ establishmentId, date }) {
       try {
         const alerts = await getAllergenAlerts(establishmentId)
         if (alerts && alerts.length > 0) {
-          const active = alerts.filter(a => a.is_resolved === false).length
-          const resolved = alerts.filter(a => a.is_resolved === true).length
-          setActiveAlertsCount(active.toString())
+          const activeItems = new Set(alerts.filter(a => a.is_resolved === false).map(a => a.order_item_id)).size
+          const resolvedItems = new Set(alerts.filter(a => a.is_resolved === true).map(a => a.order_item_id)).size
+          const totalItems = new Set(alerts.map(a => a.order_item_id)).size
+          setActiveAlertsCount(activeItems.toString())
           setTrendLabel("Alertas reales BD")
-          setResolutionRate(`${Math.round((resolved / alerts.length) * 100)}%`)
+          setResolutionRate(`${totalItems > 0 ? Math.round((resolvedItems / totalItems) * 100) : 0}%`)
         }
 
         const freq = await getAllergensFrequency(establishmentId, date)
