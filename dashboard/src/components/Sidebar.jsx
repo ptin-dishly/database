@@ -77,9 +77,9 @@ function Sidebar({ activePage, onNavigate }) {
       {/* ── Usuario conectado ── */}
       <div className="sidebar-footer">
         <div className="sidebar-user">
-          <div className="sidebar-avatar">HF</div>
+          <div className="sidebar-avatar">TA</div>
           <div className="sidebar-user-info">
-            <span className="sidebar-user-name">Hugo Fernández</span>
+            <span className="sidebar-user-name">Test Admin</span>
             <span className="sidebar-user-role">Administrador</span>
           </div>
         </div>
