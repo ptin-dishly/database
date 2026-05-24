@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 
 const proxyConfig = {
   '/api': {
-    target: 'http://localhost:3000',
+    target: 'http://localhost:3001',
     changeOrigin: true,
     rewrite: (path) => path.replace(/^\/api/, '')
   }
