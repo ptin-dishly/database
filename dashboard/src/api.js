@@ -48,10 +48,12 @@ function buildQuery(establishmentId, date, dateColumn = 'date') {
       dateStr = localDateStr();
     }
     
-    // Si la columna es un timestamp (ej. created_at), debemos buscar entre inicio y fin del día
+    // Para columnas TIMESTAMPTZ convertimos a UTC para que PostgREST filtre correctamente
     if (dateColumn === 'created_at') {
-      params.append(dateColumn, `gte.${dateStr}T00:00:00`);
-      params.append(dateColumn, `lte.${dateStr}T23:59:59`);
+      const start = new Date(`${dateStr}T00:00:00`);
+      const end = new Date(`${dateStr}T23:59:59`);
+      params.append(dateColumn, `gte.${start.toISOString()}`);
+      params.append(dateColumn, `lte.${end.toISOString()}`);
     } else {
       params.append(dateColumn, `eq.${dateStr}`);
     }
@@ -85,8 +87,10 @@ export async function getAllergenAlerts(establishmentId) {
   }
   params.append('is_resolved', 'eq.false');
   const today = localDateStr();
-  params.append('created_at', `gte.${today}T00:00:00`);
-  params.append('created_at', `lte.${today}T23:59:59`);
+  const start = new Date(`${today}T00:00:00`);
+  const end = new Date(`${today}T23:59:59`);
+  params.append('created_at', `gte.${start.toISOString()}`);
+  params.append('created_at', `lte.${end.toISOString()}`);
   return await fetchTable('allergen_alerts', `?${params.toString()}`);
 }
 
