@@ -144,7 +144,7 @@ GROUP BY o.establishment_id, DATE(o.created_at AT TIME ZONE 'Europe/Madrid'), oi
 CREATE OR REPLACE VIEW view_tables_status AS
 SELECT
     rm.establishment_id,
-    DATE(o.created_at AT TIME ZONE 'Europe/Madrid') as date,
+    COALESCE(DATE(o.created_at AT TIME ZONE 'Europe/Madrid'), (NOW() AT TIME ZONE 'Europe/Madrid')::date) as date,
     t.id as table_id,
     t.table_number,
     t.capacity,
