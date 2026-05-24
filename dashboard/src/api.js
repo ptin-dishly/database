@@ -5,7 +5,7 @@
  * la API REST proporcionada por PostgREST.
  */
 
-const API_BASE_URL = '/api'; // El proxy de Vite se encargará de enviarlo a localhost:3000
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api'; // Usa la variable de entorno en prod o el proxy de Vite en local
 
 /**
  * Realiza una petición GET a una tabla de PostgREST.
