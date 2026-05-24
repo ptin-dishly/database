@@ -193,7 +193,7 @@ function Header({ activePage, establishments, selectedEstablishment, onEstablish
                       setDateDropdownOpen(false)
                     }
                   }}
-                  max={new Date().toISOString().split('T')[0]} // No permitir fechas futuras por defecto
+                  max="2026-05-31"
                 />
               </div>
             </div>
