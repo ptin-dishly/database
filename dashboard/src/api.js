@@ -74,8 +74,8 @@ export async function getTablesList() {
   return await fetchTable('tables');
 }
 
-export async function getAllergenAlerts(establishmentId, date) {
-  return await fetchTable('allergen_alerts', buildQuery(establishmentId, date, 'created_at'));
+export async function getAllergenAlerts(establishmentId) {
+  return await fetchTable('allergen_alerts', buildQuery(establishmentId, null, 'created_at'));
 }
 
 export async function getStaff() {

@@ -133,7 +133,7 @@ function AllergensPage({ establishmentId, date }) {
   useEffect(() => {
     async function loadData() {
       try {
-        const alerts = await getAllergenAlerts(establishmentId, date)
+        const alerts = await getAllergenAlerts(establishmentId)
         if (alerts && alerts.length > 0) {
           const active = alerts.filter(a => a.is_resolved === false).length
           const resolved = alerts.filter(a => a.is_resolved === true).length
