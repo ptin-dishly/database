@@ -47,15 +47,20 @@ function buildQuery(establishmentId, date, dateColumn = 'date') {
     if (date === 'realtime') {
       dateStr = localDateStr();
     }
-    
-    // Para columnas TIMESTAMPTZ convertimos a UTC para que PostgREST filtre correctamente
+
+    // Para columnas TIMESTAMPTZ: convertimos rango local a UTC (toISOString)
+    // Para columnas DATE computadas en UTC en las vistas: usamos fecha UTC directamente
     if (dateColumn === 'created_at') {
       const start = new Date(`${dateStr}T00:00:00`);
       const end = new Date(`${dateStr}T23:59:59`);
       params.append(dateColumn, `gte.${start.toISOString()}`);
       params.append(dateColumn, `lte.${end.toISOString()}`);
     } else {
-      params.append(dateColumn, `eq.${dateStr}`);
+      // Las vistas usan DATE(created_at) que es UTC — usamos fecha UTC para alinear
+      const utcStr = date === 'realtime'
+        ? new Date().toISOString().split('T')[0]
+        : dateStr;
+      params.append(dateColumn, `eq.${utcStr}`);
     }
   }
   
